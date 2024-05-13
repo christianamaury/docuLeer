@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import MaxWidthWrapper from "./Components/MaxWidthWrapper";
 
 //items: center is for Vertical Aligment
@@ -21,7 +22,7 @@ export default function Home() {
       </p>
 
       <Link href='/dashboard' target='_blank'>
-        Empieza Ahora
+        Comienza ahora! 
       </Link>
 
     </MaxWidthWrapper>
