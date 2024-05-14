@@ -1,5 +1,15 @@
 import Image from 'next/image'
+
+//In order to use the link anchor feature;
 import Link from 'next/link'
+
+//buttonVariants {} from the components/ui section
+//This would set the custom button: Comienza Ahora
+import {buttonVariants} from "../components/ui/button"
+
+//Importing icon react library
+import {ArrowRight} from "lucide-react"
+
 import MaxWidthWrapper from "./Components/MaxWidthWrapper";
 
 //items: center is for Vertical Aligment
@@ -21,8 +31,10 @@ export default function Home() {
 
       </p>
 
-      <Link href='/dashboard' target='_blank'>
-        Comienza ahora! 
+      <Link className={buttonVariants({size: 'lg',className:'mt-5',})} href='/dashboard' target='_blank'>
+
+        Comienza ahora <ArrowRight className='ml-2 h-5 w-5'/>
+        
       </Link>
 
     </MaxWidthWrapper>
