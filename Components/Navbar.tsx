@@ -1,3 +1,4 @@
+import { buttonVariants } from '@/components/ui/button';
 import MaxWidthWrapper from '../Components/MaxWidthWrapper'
 //We would be adding our product logo in the NavBar; 
 //In order to use the link anchor feature;
@@ -13,6 +14,20 @@ const Navbar = () => {
                 <Link href='/'className='flex z-40 font-semibold'>
                     <span className='text-red-400'> DocuLeer </span>
                 </Link>
+
+                {/* Mobile Navigation */}
+
+                <div className='hidden items-center space-x-4 sm:flex'>
+                    <>
+                        <Link href= '/pricing' className={buttonVariants({
+                            variant: "ghost",
+                            size: 'sm',
+
+                        })}> Pricing </Link>
+                    
+                    </>
+
+                </div>
 
             </div>
 
