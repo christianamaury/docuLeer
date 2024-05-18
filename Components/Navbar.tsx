@@ -5,6 +5,12 @@ import MaxWidthWrapper from '../Components/MaxWidthWrapper'
 // The following symbol would take the user to the home page: Link '/'
 import Link from 'next/link'
 
+//Importing icon react library
+import {ArrowRight} from "lucide-react"
+
+//You need to import the LoginLink framework in order to use this class; 
+import {LoginLink, RegisterLink} from '@kinde-oss/kinde-auth-nextjs/server'
+
 const Navbar = () => {
 
     return (
@@ -23,7 +29,22 @@ const Navbar = () => {
                             variant: "ghost",
                             size: 'sm',
 
-                        })}> Pricing </Link>
+                        })}> Pricing 
+                        </Link>
+                        <LoginLink className={buttonVariants({
+                            variant: "ghost",
+                            size: 'sm',
+
+                        })}>
+                            Accede tu Cuenta
+                        </LoginLink>
+
+                        <RegisterLink className={buttonVariants({
+                            size: 'sm',
+
+                        })}>
+                            Registrate <ArrowRight className='ml-1.5 h-5 w-5'/>
+                        </RegisterLink>
                     
                     </>
 
