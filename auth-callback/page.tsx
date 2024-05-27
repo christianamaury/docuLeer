@@ -1,5 +1,4 @@
 "use client"
-
 //router navigation; 
 import {useRouter, useSearchParams} from 'next/navigation'
 import { trpc } from '../_trpc/client'
@@ -10,36 +9,53 @@ import { Loader2 } from 'lucide-react'
 const Page = () => {
 
     const router = useRouter()
-
     const searchParams = useSearchParams()
-    const origin = searchParams.get('orgin')
+    const origin = searchParams.get('origin')
 
-    // const apiResponse = await fetch('/api/whatever')
-    
-    // const data = await apiResponse.json()
-
-    // const {data} = trpc.test.useQuery
-    // const {data, isLoading} = trpc.test.useQuery()
-    trpc.authCallback.useQuery(undefined, {
-        onSuccess: ({success}) => {
-            //If user sync is successfull
-            //Push user back to 'origin' point if there's an origin path
-            if(success){
-                router.push(origin ? `/${origin}` : `/dashboard`)
-            }
+    // trpc.authCallback.useQuery(undefined, {
+    //     onSuccess: ({success}) => {
+    //         //If user sync is successfull
+    //         //Push user back to 'origin' point if there's an origin path
+    //         if(success){
+    //             router.push(origin ? `/${origin}` : '/dashboard')
+    //         }
 
 
-        },
-        onError: (err) => {
-            if(err.data?.code === "UNAUTHORIZED"){
-                //Pushing user to sign in into the webiste
-                router.push("/sign-in")
-            }
+    //     },
+    //     onError: (err) => {
+    //         if(err.data?.code === "UNAUTHORIZED"){
+    //             //Pushing user to sign in into the webiste
+    //             router.push('/sign-in')
+    //         }
 
-        }, 
-        retry: true,
-        retryDelay: 500
-    })
+    //     }, 
+    //     retry: true,
+    //     retryDelay: 500
+    // })
+
+    const query = trpc.authCallback.useQuery(undefined, {
+        retry: true, 
+        retryDelay: 500, 
+
+    });
+    //Checking if there's any errors in the Results of the Query;
+    if(query.error){
+        const errData = query.error.data;
+        if(errData?.code === 'UNAUTHORIZED'){
+            router.push ('/sign-in')
+
+        } else{
+            //This would handle any of others errors; 
+            console.error("An error has occurred", query.error)
+        }
+
+    }
+    //If data is succeded, back to the main Dashboard; 
+    // if(query.data?.success) 
+    if(query.data?.success){
+        router.push(origin ? `${origin}` : '/dashboard');
+
+    }
 
     return (
         <div className='w-full mt-24 flex justify-center'>
