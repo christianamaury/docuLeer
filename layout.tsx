@@ -1,5 +1,5 @@
 import './globals.css'
-import type { Metadata } from 'next'
+import type Metadata from 'next'
 import { Inter } from 'next/font/google'
 //Importing the utility file
 //Reusable Component
