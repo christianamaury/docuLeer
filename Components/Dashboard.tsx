@@ -13,6 +13,10 @@ const Dashboard = () => {
 
                 <UploadButton/>
             </div>
+
+            {/* Display all users files */}
+            
+
         </main>
     )
 }
