@@ -1,5 +1,7 @@
 
-//UploadButton tag its a total separate component; 
+//UploadButton would be an entire upload button module, sort of a component;
+import UploadButton from '../Components/UploadButton'
+
 const Dashboard = () => {
     // return (<div> Hello Sr. </div>)
     return (
@@ -10,7 +12,6 @@ const Dashboard = () => {
                 </h1>
 
                 <UploadButton/>
-
             </div>
         </main>
     )
