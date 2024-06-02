@@ -5,6 +5,7 @@
 import { Ghost } from 'lucide-react'
 import UploadButton from '../Components/UploadButton'
 import {trpc} from '@/app/_trpc/client'
+import Skeleton from "react-loading-skeleton"
 
 const Dashboard = () => {
     // return (<div> Hello Sr. </div>)

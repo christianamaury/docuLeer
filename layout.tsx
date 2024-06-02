@@ -1,11 +1,14 @@
 import './globals.css'
-import type Metadata from 'next'
+import type {Metadata} from 'next'
 import { Inter } from 'next/font/google'
 //Importing the utility file
 //Reusable Component
 import {cn} from "../lib/utils"
 import Navbar from "./Components/Navbar"
 import Providers from './Components/Providers'
+
+//Importing the Skeleton library; 
+import Skeleton from "react-loading-skeleton"
 
 const inter = Inter({ subsets: ['latin'] })
 
