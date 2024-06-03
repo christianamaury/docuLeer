@@ -28,9 +28,9 @@ const Dashboard = () => {
             {/* Display all users Files */}
             {/* Initial State va a ser: No tienes ningun documento todavia del if else statement*/}
             {files && files?.length !== 0 ? (
-                <div> </div>
+                <ul> </ul>
             ) : isLoading ? (
-                <div> </div>
+                <Skeleton height={100} className='my-2' count={3}/>
 
             ) : (
                 <div className='mt-16 flex flex-col items-center gap-2'> 
