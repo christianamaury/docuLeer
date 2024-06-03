@@ -7,6 +7,8 @@ import UploadButton from '../Components/UploadButton'
 import {trpc} from '@/app/_trpc/client'
 import Skeleton from "react-loading-skeleton"
 
+//Everytime that we map over something, we need a: key;
+
 const Dashboard = () => {
     // return (<div> Hello Sr. </div>)
 
@@ -24,11 +26,20 @@ const Dashboard = () => {
                 <UploadButton/>
 
             </div>
-
+            
             {/* Display all users Files */}
             {/* Initial State va a ser: No tienes ningun documento todavia del if else statement*/}
             {files && files?.length !== 0 ? (
-                <ul> </ul>
+                <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3"> 
+                {/* Sorting Files for the users */}
+                    {files.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((file) => (
+                    
+                        <li key={file.id} className='col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg'>
+
+                        </li>
+                    ))}
+                
+                </ul>
             ) : isLoading ? (
                 <Skeleton height={100} className='my-2' count={3}/>
 
