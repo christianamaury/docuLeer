@@ -2,12 +2,18 @@
 
 //This is a client component; 
 //UploadButton would be an entire upload button module, sort of a component;
-import { Ghost } from 'lucide-react'
+//Adding Library for icons; 
+import { Ghost, Plus } from 'lucide-react'
 import UploadButton from '../Components/UploadButton'
 import {trpc} from '@/app/_trpc/client'
 import Skeleton from "react-loading-skeleton"
 // The following symbol would take the user to the home page: Link '/'
 import Link from 'next/link'
+
+//Utility Dependency for the formatting timezone
+//Expected 2 to 3 arguments on the function;
+//"MMM yyyy" = Month & Year Reference; 
+import {format} from "date-fns"
 
 //Everytime that we map over something, we need a: key;
 //This color on the mapping area needs to be updated: from-cyan-500 to-blue-500(Just for Testing)
@@ -43,11 +49,21 @@ const Dashboard = () => {
                                     <div className='h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500'> </div>
                                     <div className='flex-1 truncate'> 
                                         <div className='flex items-center space-x-3'>
-                                            <h3 className='truncate text-lg font-medium text-zinc-900'> {file.name} </h3>
+                                            <h3 className='truncate text-lg font-medium text-zinc-900'> 
+                                             {file.name} 
+                                            </h3>
                                         </div>  
                                     </div>
                                 </div>
                             </Link>
+                            
+                            {/* When the file was uploaded, basically when it was created;*/}
+                            <div className='px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500'>
+                                <div className = 'flex items-center gap-2'>
+                                    <Plus className='h-4 w-4'/>
+                                        {format(new Date(file.createdAt), "MMM yyyy")}
+                                </div>
+                            </div>
                         </li>
                     ))}
                 
