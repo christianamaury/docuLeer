@@ -3,7 +3,7 @@
 //This is a client component; 
 //UploadButton would be an entire upload button module, sort of a component;
 //Adding Library for icons; 
-import { Ghost, MessageSquare, Plus } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash } from 'lucide-react'
 import UploadButton from '../Components/UploadButton'
 import {trpc} from '@/app/_trpc/client'
 import Skeleton from "react-loading-skeleton"
@@ -14,6 +14,7 @@ import Link from 'next/link'
 //Expected 2 to 3 arguments on the function;
 //"MMM yyyy" = Month & Year Reference; 
 import {format} from "date-fns"
+import { Button } from '@/components/ui/button'
 
 //Everytime that we map over something, we need a: key;
 //This color on the mapping area needs to be updated: from-cyan-500 to-blue-500(Just for Testing)
@@ -69,7 +70,10 @@ const Dashboard = () => {
                                     testing Reference
                                 </div>
 
-                                
+                                {/* Trash Icon Button to delete the files from the Dashboard. */}
+                                <Button>
+                                    <Trash className='h-4 w-4'/>
+                                </Button>
 
                             </div>
                         </li>
