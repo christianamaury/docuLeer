@@ -3,7 +3,8 @@
 //This is a client component; 
 //UploadButton would be an entire upload button module, sort of a component;
 //Adding Library for icons; 
-import { Ghost, MessageSquare, Plus, Trash } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash, Loader2 } from 'lucide-react'
+import {useState} from 'react'
 import UploadButton from '../Components/UploadButton'
 import {trpc} from '@/app/_trpc/client'
 import Skeleton from "react-loading-skeleton"
@@ -19,12 +20,48 @@ import { Button } from '@/components/ui/button'
 //Everytime that we map over something, we need a: key;
 //This color on the mapping area needs to be updated: from-cyan-500 to-blue-500(Just for Testing)
 
+
 const Dashboard = () => {
     // return (<div> Hello Sr. </div>)
+
+    //In order to check which file is being deleted it. 
+    //It would be a string or null value; Default value = null
+    const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<string | null> (null)
+
+
+
+    //Validate to enforce to refresh the data right at the moment; 
+    //TEST SINCE useContext has depreceated it;
+    const utils = trpc.useContext()
 
     //Reference of our getUSerFile Query; Client utility Component
     //Automaticallys knows the endpoint data values;
     const {data: files, isLoading} = trpc.getUserFiles.useQuery()
+
+    //Destructing from trcp router to the Front-End, index.ts trpc; 
+    //Renaming mutate to delete files
+    //onSuccess callback might have depreceated; 
+    const {mutate: deleteFile} = trpc.deleteFile.useMutation({
+
+        //THIS LINE NEEDS TO BE TESTED IT; 
+        onSuccess: () => {
+                //Endpoint that we would like to address..
+                utils.getUserFiles.invalidate()
+        }, 
+
+        //Whenever we click the button right away;
+        //Basically currently deleting this id object; 
+        onMutate({id}){
+            setCurrentlyDeletingFile(id)
+        }, 
+
+        //When an error is throw; we're not deleting anything yet; 
+        onSettled(){
+            setCurrentlyDeletingFile(null)
+        }
+        
+    })
+
    
     return (
         <main className='mx-auto max-w-7xl md:p-10'>
@@ -70,9 +107,10 @@ const Dashboard = () => {
                                     testing Reference
                                 </div>
 
-                                {/* Trash Icon Button to delete the files from the Dashboard. */}
-                                <Button>
-                                    <Trash className='h-4 w-4'/>
+                                {/* Trash Icon Button to delete the files from the Dashboard, variant variable destructive to make it color red. onClick file.id object that we're mapping to delete */}
+                                <Button onClick={() => deleteFile({id:file.id})} size='sm' className='w-full' variant= 'destructive'>
+                                    {/* If it is true, show the loading state  */}
+                                    {currentlyDeletingFile === file.id ? (<Loader2 className='h-4 w-4 animate-spin'/>) : (<Trash className='h-4 w-4'/>)}
                                 </Button>
 
                             </div>
