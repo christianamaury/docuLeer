@@ -3,7 +3,7 @@
 //This is a client component; 
 //UploadButton would be an entire upload button module, sort of a component;
 //Adding Library for icons; 
-import { Ghost, Plus } from 'lucide-react'
+import { Ghost, MessageSquare, Plus } from 'lucide-react'
 import UploadButton from '../Components/UploadButton'
 import {trpc} from '@/app/_trpc/client'
 import Skeleton from "react-loading-skeleton"
@@ -63,6 +63,14 @@ const Dashboard = () => {
                                     <Plus className='h-4 w-4'/>
                                         {format(new Date(file.createdAt), "MMM yyyy")}
                                 </div>
+
+                                <div className='flex items-center gap-2'>
+                                    <MessageSquare className='h-4 w-4'/>
+                                    testing Reference
+                                </div>
+
+                                
+
                             </div>
                         </li>
                     ))}
