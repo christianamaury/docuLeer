@@ -33,6 +33,7 @@ const Page = () => {
     //     retryDelay: 500
     // })
 
+    //CUSTOM CODE
     const query = trpc.authCallback.useQuery(undefined, {
         retry: true, 
         retryDelay: 500, 
