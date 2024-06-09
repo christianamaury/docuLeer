@@ -7,6 +7,21 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@radix-ui/react-dialog'
 import {useState} from 'react'
 
+//Importing the Dropzone Library;
+import Dropzone from "react-dropzone"
+
+//getRootProps comes from the Dropzone Library; 
+//Whenever someone drops the files it would be for the: acceptedFiles;
+const UploadDropzone = () => {
+    return <Dropzone multiple={false}>
+            {/* We can destructre objects right away */}
+            {({getRootProps, getInputProps, acceptedFiles}) => (
+                <div></div>
+            )}
+        
+         </Dropzone>
+}
+
 
 const UploadButton = () => {
     //By default would set to False
@@ -24,7 +39,8 @@ const UploadButton = () => {
             </DialogTrigger>
 
             <DialogContent>
-                    Ejemplo de tu documento
+                    {/*Custom Component*/}
+                    <UploadDropzone/>
             </DialogContent>
         </Dialog>
      )
