@@ -17,6 +17,7 @@ import Dropzone from "react-dropzone"
 //Whenever someone drops the files it would be for the: acceptedFiles;
 //Passin props on the div
 //onDrop{} to check if it was successful
+//PDF(4MB) section would dynamically change depending if the user is a Pro one. Pro would be 16MB
 const UploadDropzone = () => {
     return <Dropzone multiple={false} onDrop={(acceptedFiles) => {
         console.log(acceptedFiles)
@@ -30,8 +31,24 @@ const UploadDropzone = () => {
                         <label htmlFor='dropzone-file' className='flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100'> 
                             <div className='flex flex-col items-center justify-center pt-5 pb-6'>
                                 <Cloud className='h-6 w-6 text-zinc-500 mb-2'/>
+                                <p className='mb-2 text-sm text-zinc-700'>
+                                    <span className='font-semibold'> Aqui para subir documento </span> {''} o agarra el documento y sueltalo en el area
+                                </p>
+
+                                <p className='text-xs text-zinc-500'> 
+                                    PDF (hasta 4MB)
+                                </p>
 
                             </div>
+
+                            {/* User feedback so whenever they drop a PDF file on the drop area; Ternary Operator */}
+                            {acceptedFiles && acceptedFiles[0] ? (
+                                <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200 '>
+
+                                    
+                                </div>
+
+                            ) : null }
                         
                         </label>
 
