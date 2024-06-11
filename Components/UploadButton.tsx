@@ -8,7 +8,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@radix-ui/react-dialog'
 import {useState} from 'react'
 
 //Lucide React Library
-import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File } from 'lucide-react'
 
 //Importing the Dropzone Library;
 import Dropzone from "react-dropzone"
@@ -19,6 +19,11 @@ import Dropzone from "react-dropzone"
 //onDrop{} to check if it was successful
 //PDF(4MB) section would dynamically change depending if the user is a Pro one. Pro would be 16MB
 const UploadDropzone = () => {
+
+    //Creating Loading state for whenever an user upload a file;
+    const [isUpLoading, setIsUploading] = useState<boolean>(true)
+
+
     return <Dropzone multiple={false} onDrop={(acceptedFiles) => {
         console.log(acceptedFiles)
 
@@ -44,11 +49,26 @@ const UploadDropzone = () => {
                             {/* User feedback so whenever they drop a PDF file on the drop area; Ternary Operator */}
                             {acceptedFiles && acceptedFiles[0] ? (
                                 <div className='max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200 '>
+                                    <div className='px-3 py-2 h-full grid place-items-center'>
+                                        {/*Initially set text-blue-500*/}
+                                        <File className='h-4 w-4 text-red-500'/>
+                                    </div>
+                                    {/* Display PDF file name. Rendering file name */}
+                                    <div className='px-3 py-2 h-full text-sm truncate'>
+                                        {acceptedFiles[0].name}
+                                    </div>
 
-                                    
                                 </div>
 
                             ) : null }
+
+                            {/* Displaying Loading state of the PDF file. If it's true*/}
+                            {isUpLoading ? (
+                                <div className='w-ful mt-4 max-w-xs mx-auto'>
+                                    
+                                </div>
+
+                            ) : null}
                         
                         </label>
 
