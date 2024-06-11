@@ -12,6 +12,9 @@ import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File } from 'lucide-
 
 //Importing the Dropzone Library;
 import Dropzone from "react-dropzone"
+//Imported this library from Shadcn
+import { Progress } from '@/components/ui/progress'
+import { previousDay } from 'date-fns'
 
 //getRootProps comes from the Dropzone Library; 
 //Whenever someone drops the files it would be for the: acceptedFiles;
@@ -23,9 +26,52 @@ const UploadDropzone = () => {
     //Creating Loading state for whenever an user upload a file;
     const [isUpLoading, setIsUploading] = useState<boolean>(true)
 
+    //Keeping track of the uploading state; 
+    const [uploadProgress, setUploadProgress] = useState<number>(0)
 
-    return <Dropzone multiple={false} onDrop={(acceptedFiles) => {
+    //Creating a Progress Determined Bar; 
+    const startSimulatedProgressBar= () => {
+
+        //Set to 0; Uploading State;
+        setUploadProgress(0)
+
+        //setInterval is a Javascript Function; 
+        //Takes an interval as the second argument
+        //500 milluseconds
+        const interval = setInterval(() => {
+
+            setUploadProgress((prevProgress) => {
+                //Don't progress anymore; 
+                if(prevProgress >= 95){
+                    clearInterval(interval)
+                    return prevProgress
+                }
+                //Returning the previous progress + 5 sec
+                return prevProgress + 5
+            })
+
+        }, 500)
+
+        return interval
+
+    }
+
+
+    return <Dropzone multiple={false} onDrop={async(acceptedFiles) => {
+        //This value would conditionally render the progress bar;
+        setIsUploading(true)
         console.log(acceptedFiles)
+
+        const progressInterval = startSimulatedProgressBar()
+
+        //Handling the file uploading process; 
+        //This would DELAY EFFECT for the user Progress loading bar. 
+        await new Promise((resolve) => setTimeout(resolve, 1500))
+
+        //Clearing the Interval and setting up to 100 because we're done with the downloading process now;
+        clearInterval(progressInterval)
+        setUploadProgress(100)
+
 
     }}>
             {/* We can destructre objects right away */}
@@ -65,7 +111,8 @@ const UploadDropzone = () => {
                             {/* Displaying Loading state of the PDF file. If it's true*/}
                             {isUpLoading ? (
                                 <div className='w-ful mt-4 max-w-xs mx-auto'>
-                                    
+                                    <Progress value={uploadProgress} className='h-1 w-full bg-zinc-200'/>
+
                                 </div>
 
                             ) : null}
