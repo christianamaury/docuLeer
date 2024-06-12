@@ -1,5 +1,11 @@
+
+//Component to upload Files once the user has been verified as a member.
+
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
+
+//Library for the User Login verification;
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
  
 const f = createUploadthing();
  
@@ -16,19 +22,23 @@ export const ourFileRouter = {
     .middleware(async ({ req }) => {
 
         //Only authenticate user can upload a file
-        //checking from KindleSession;
+        //Checking from KindleSession;
+        const {getUser} = await getKindeServerSession()
+        const user = await getUser()
 
-    //   // This code runs on your server before upload
-    //   const user = await auth(req);
+        //I can also try to use the following TRCP Error: throw new TRPCError({code: 'UNAUTHORIZED'})
+        if(!user || !user.id) throw new Error("Unauthorized")
+      
+        // This code runs on your server before upload
+        //const user = await auth(req);
  
-    //   // If you throw, the user will not be able to upload
-    //   if (!user) throw new UploadThingError("Unauthorized");
+        // If you throw, the user will not be able to upload
+        //if (!user) throw new UploadThingError("Unauthorized");
 
-      //   // Whatever is returned here is accessible in onUploadComplete as `metadata`
-    //   return { userId: user.id };
-
-
-        return {}
+        // Whatever is returned here is accessible in onUploadComplete as `metadata`
+        //return { userId: user.id };
+        //Passing the user information;
+        return {userId: user.id}
   
     })
 
