@@ -15,6 +15,7 @@ import Dropzone from "react-dropzone"
 //Imported this library from Shadcn
 import { Progress } from '@/components/ui/progress'
 import { previousDay } from 'date-fns'
+import { useUploadThing } from '../lib/uploadthing'
 
 //getRootProps comes from the Dropzone Library; 
 //Whenever someone drops the files it would be for the: acceptedFiles;
@@ -28,6 +29,9 @@ const UploadDropzone = () => {
 
     //Keeping track of the uploading state; 
     const [uploadProgress, setUploadProgress] = useState<number>(0)
+
+    //Destructing the startUpload function from the uploadthing hook;
+    const {startUpload} = useUploadThing("pdfUploader")
 
     //Creating a Progress Determined Bar; 
     const startSimulatedProgressBar= () => {
@@ -65,8 +69,16 @@ const UploadDropzone = () => {
         const progressInterval = startSimulatedProgressBar()
 
         //Handling the file uploading process; 
-        //This would DELAY EFFECT for the user Progress loading bar. 
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+        const res = await startUpload(acceptedFiles)
+
+        //If there's no Response back, show an error message;
+        if(!res){
+            //Destructive Notification from shadcn/ui
+            //This Destructive Notification would bring a red alert message at the bottom of the website
+        }
+
+        //This would DELAY EFFECT for the user Progress loading bar. IT CAN BE REMOVED;
+        //await new Promise((resolve) => setTimeout(resolve, 1500))
 
         //Clearing the Interval and setting up to 100 because we're done with the downloading process now;
         clearInterval(progressInterval)

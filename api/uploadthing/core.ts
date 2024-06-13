@@ -15,7 +15,7 @@ const f = createUploadthing();
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   // MaxFile can be increased if the user is a pro user
-  imageUploader: f({ image: { maxFileSize: "4MB" } })
+  pdfUploader: f({ image: { maxFileSize: "4MB" } })
 
     // Set permissions and file types for this FileRoute
     //It would run whenver someone has requested to uplaod a File; User -> MW(middleware)
