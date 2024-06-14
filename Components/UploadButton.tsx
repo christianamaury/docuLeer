@@ -17,6 +17,11 @@ import { Progress } from '@/components/ui/progress'
 import { previousDay } from 'date-fns'
 import { useUploadThing } from '../lib/uploadthing'
 
+//Destructive Notifications, Toast, shadcn/ui library; 
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
+
+
 //getRootProps comes from the Dropzone Library; 
 //Whenever someone drops the files it would be for the: acceptedFiles;
 //Passin props on the div
@@ -29,6 +34,8 @@ const UploadDropzone = () => {
 
     //Keeping track of the uploading state; 
     const [uploadProgress, setUploadProgress] = useState<number>(0)
+
+   const {toast} = useToast()
 
     //Destructing the startUpload function from the uploadthing hook;
     const {startUpload} = useUploadThing("pdfUploader")
@@ -75,6 +82,14 @@ const UploadDropzone = () => {
         if(!res){
             //Destructive Notification from shadcn/ui
             //This Destructive Notification would bring a red alert message at the bottom of the website
+            //Returning a toast notification: Toast always takes a props notification
+            return ({
+                title: 'Something just went wrong :(',
+                description: "Please try again later",
+                variant: "destructive"
+
+            })
+       
         }
 
         //This would DELAY EFFECT for the user Progress loading bar. IT CAN BE REMOVED;

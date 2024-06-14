@@ -9,6 +9,9 @@ import Providers from './Components/Providers'
 //Importing the Skeleton CSS library; 
 import "react-loading-skeleton/dist/skeleton.css"
 
+//Destructive Notifications, Toast, shadcn/ui library; 
+import { Toaster } from "@/components/ui/toaster"
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -24,6 +27,7 @@ export default function RootLayout({
     <html lang="en" className='light'>
       <Providers>
         <body className={cn('min.screen font-sans antialiased grainy',inter.className)}>
+            <Toaster/>
            <Navbar/>
            {children}
         </body>
