@@ -68,29 +68,43 @@ const UploadDropzone = () => {
     }
 
 
-    return <Dropzone multiple={false} onDrop={async(acceptedFiles) => {
+    return <Dropzone multiple={false} onDrop={async(acceptedFile) => {
         //This value would conditionally render the progress bar;
         setIsUploading(true)
-        console.log(acceptedFiles)
+        console.log(acceptedFile)
 
         const progressInterval = startSimulatedProgressBar()
 
         //Handling the file uploading process; 
-        const res = await startUpload(acceptedFiles)
+        const res = await startUpload(acceptedFile)
 
         //If there's no Response back, show an error message;
         if(!res){
             //Destructive Notification from shadcn/ui
             //This Destructive Notification would bring a red alert message at the bottom of the website
             //Returning a toast notification: Toast always takes a props notification
-            return ({
+            return toast({
                 title: 'Something just went wrong :(',
                 description: "Please try again later",
                 variant: "destructive"
-
             })
-       
         }
+        //Destructing the array;
+        const [fileResponse] = res
+        const key = fileResponse?.key
+
+        //Making sure the key is always a string
+        //..Key Proceeding
+        if(!key){
+            //Returning a toast notification; 
+            return toast ({
+                title: 'Something just went wrong :(',
+                description: "Please try again later",
+                variant: "destructive"
+            })
+        }
+
+
 
         //This would DELAY EFFECT for the user Progress loading bar. IT CAN BE REMOVED;
         //await new Promise((resolve) => setTimeout(resolve, 1500))
