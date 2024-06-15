@@ -20,6 +20,10 @@ import { useUploadThing } from '../lib/uploadthing'
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
+//Importing trcp Library;
+import {trpc} from "@/app/_trpc/client"
+import { useRouter } from 'next/navigation'
+
 
 
 //getRootProps comes from the Dropzone Library; 
@@ -28,6 +32,9 @@ import { useToast } from "@/components/ui/use-toast"
 //onDrop{} to check if it was successful
 //PDF(4MB) section would dynamically change depending if the user is a Pro one. Pro would be 16MB
 const UploadDropzone = () => {
+
+    //Accesing our Router;
+    const router = useRouter()
 
     //Creating Loading state for whenever an user upload a file;
     const [isUpLoading, setIsUploading] = useState<boolean>(true)
@@ -39,6 +46,19 @@ const UploadDropzone = () => {
 
     //Destructing the startUpload function from the uploadthing hook;
     const {startUpload} = useUploadThing("pdfUploader")
+
+    //In order to make it trigger, we need to pass the mutate
+    const {mutate: startPolling} = trpc.getFile.useMutation({
+        onSuccess: (file) => {
+            //Re-directing the user if there's a file
+            router.push(`/dashboard/${file.id}`)
+        },
+
+        //This would make it try indefinitely until we get a successful return; 
+        retry: true, 
+        retryDelay: 500
+
+    })
 
     //Creating a Progress Determined Bar; 
     const startSimulatedProgressBar= () => {
@@ -113,6 +133,9 @@ const UploadDropzone = () => {
         clearInterval(progressInterval)
         setUploadProgress(100)
 
+        //We'd start polling..from the Database; 
+        startPolling({key})
+
 
     }}>
             {/* We can destructre objects right away */}
@@ -157,6 +180,8 @@ const UploadDropzone = () => {
                                 </div>
 
                             ) : null}
+                            
+                            <input {...getInputProps()} type="file" id='dropzone-file' className='hidden'/>
                         
                         </label>
 
