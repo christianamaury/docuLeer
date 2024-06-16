@@ -6,7 +6,10 @@ import { UploadThingError } from "uploadthing/server";
 
 //Library for the User Login verification;
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
- 
+
+//Importing Prisma db; 
+import {db} from '@/db'
+
 const f = createUploadthing();
  
 // const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
@@ -15,7 +18,7 @@ const f = createUploadthing();
 export const ourFileRouter = {
   // Define as many FileRoutes as you like, each with a unique routeSlug
   // MaxFile can be increased if the user is a pro user
-  pdfUploader: f({ image: { maxFileSize: "4MB" } })
+  pdfUploader: f({ pdf: { maxFileSize: "4MB" } })
 
     // Set permissions and file types for this FileRoute
     //It would run whenver someone has requested to uplaod a File; User -> MW(middleware)
@@ -45,6 +48,21 @@ export const ourFileRouter = {
     //It runs when the file has been upload successfully; 
     .onUploadComplete(async ({ metadata, file }) => {
 
+      //Adding the files using Prisma; 
+      //medata.userId is pass through the .middleware; 
+      //`https:/uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}` or file.key is the same.
+      //Only difference is that the https website implementation always works. 
+      const createdFile = await db.file.create({
+        data: {
+          key: file.key,
+          name: file.name, 
+          userId: metadata.userId, 
+          url: `https:/uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`, 
+          uploadStatus: 'PROCESSING', 
+        }, 
+
+      })
+     
     //   // This code RUNS ON YOUR SERVER after upload
     //   console.log("Upload complete for userId:", metadata.userId);
  

@@ -24,8 +24,6 @@ import { useToast } from "@/components/ui/use-toast"
 import {trpc} from "@/app/_trpc/client"
 import { useRouter } from 'next/navigation'
 
-
-
 //getRootProps comes from the Dropzone Library; 
 //Whenever someone drops the files it would be for the: acceptedFiles;
 //Passin props on the div
