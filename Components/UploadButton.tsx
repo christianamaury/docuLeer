@@ -35,7 +35,8 @@ const UploadDropzone = () => {
     const router = useRouter()
 
     //Creating Loading state for whenever an user upload a file;
-    const [isUpLoading, setIsUploading] = useState<boolean>(true)
+    //False value so the progress bar doesn't show up until an user upload a file; 
+    const [isUpLoading, setIsUploading] = useState<boolean>(false)
 
     //Keeping track of the uploading state; 
     const [uploadProgress, setUploadProgress] = useState<number>(0)
@@ -174,7 +175,14 @@ const UploadDropzone = () => {
                             {isUpLoading ? (
                                 <div className='w-ful mt-4 max-w-xs mx-auto'>
                                     <Progress value={uploadProgress} className='h-1 w-full bg-zinc-200'/>
-
+                                    {/*If we're done uploading the file, show a redirect message*/}
+                                    {uploadProgress === 100 ? (
+                                        <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
+                                            {/*Showing Spin Icon to the User;*/}
+                                                <Loader2 className='h-3 w-3 animate-spin'/>
+                                                Re-dirigiendo.. 
+                                        </div>
+                                    ) : null}   
                                 </div>
 
                             ) : null}
