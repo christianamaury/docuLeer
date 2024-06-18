@@ -174,7 +174,12 @@ const UploadDropzone = () => {
                             {/* Displaying Loading state of the PDF file. If it's true*/}
                             {isUpLoading ? (
                                 <div className='w-ful mt-4 max-w-xs mx-auto'>
-                                    <Progress value={uploadProgress} className='h-1 w-full bg-zinc-200'/>
+                                    <Progress indicatorColor={
+                                        //Change color if the user is done uploading the file
+                                        uploadProgress === 100 ? 'bg-green-500' : ''
+
+                                    } value={uploadProgress} className='h-1 w-full bg-zinc-200'/>
+                                    
                                     {/*If we're done uploading the file, show a redirect message*/}
                                     {uploadProgress === 100 ? (
                                         <div className='flex gap-1 items-center justify-center text-sm text-zinc-700 text-center pt-2'>
