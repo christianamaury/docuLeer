@@ -1,15 +1,21 @@
+
+"use client"
+
+//This needs to be a client component ^ Needs to be renderer in the Client side;
 //The Document Component we would get it from the PDF Library
-import {Document, Page} from "react-pdf"
+import {Document, Page, pdfjs} from "react-pdf"
 //Library for “Suporting for annotations".
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 //Support for Text Layer; 
 import 'react-pdf/dist/Page/TextLayer.css';
 
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
+
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
     url: string
 }
-//Worker in order to render a PDF
+//Worker in order to render a PDF. It need 
 //Assing a prop to our PdfRender Component
 const PdfRenderer = ({url}: PdfRenderProps) => {
     return <div className='w-full bg-white rounded-md shadow flex flex-col items-center'> 
