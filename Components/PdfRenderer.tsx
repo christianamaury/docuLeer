@@ -11,13 +11,15 @@ import 'react-pdf/dist/Page/TextLayer.css';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 //Lucide React Library
-import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown } from 'lucide-react'
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
 
 //This function comes from the react-resize-detector library
 import {useResizeDetector} from "react-resize-detector"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
@@ -38,7 +40,17 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
             {/* PDF Options Funtionality */}
             <div className='h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2'>
                 <div className='flex items-center gap-1.5'>
-                    Barra de Arriba.
+                    {/* Adding a button, varian ghost color*/}
+                    <Button variant='ghost' aria-label='previous page'> 
+                        <ChevronDown className='h-4 w-4' />
+                    </Button>
+
+                    <div className='flex items-center gap-1.5'>
+                        {/* We would be using here an input component; Line below comes from the following library: shadcn-ui@latest add input*/}
+                        <Input className='w-12 h-8'/>
+
+                    </div>
+
                 </div>
             </div>
 
