@@ -7,11 +7,12 @@ import {Document, Page, pdfjs} from "react-pdf"
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 //Support for Text Layer; 
 import 'react-pdf/dist/Page/TextLayer.css';
+import {useState} from 'react'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 //Lucide React Library
-import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown, ChevronUp } from 'lucide-react'
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
@@ -31,6 +32,14 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
 
     const {toast} = useToast()
 
+    //Number of Pages of the PDF; 
+    //We'd use this constant variable in the onLoadSuccess method <Document />
+    const [numPages, setNumPages] = useState<number>()
+   
+    //In order to keep track on which PDF file we're currently in;
+    //By default we would like to be in the 1st page of the Document; 
+    const [currentPage, setCurrentPage] = useState<number>(1)
+
     //This function comes from the react-resize-detector library
     //Destructing the width and the ref element;
     const {width, ref} = useResizeDetector()
@@ -41,15 +50,24 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
             <div className='h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2'>
                 <div className='flex items-center gap-1.5'>
                     {/* Adding a button, varian ghost color*/}
-                    <Button variant='ghost' aria-label='previous page'> 
+                    <Button disabled = {currentPage <= 1 } onClick={() => {setCurrentPage((prev) => (prev - 1 > 1 ? prev - 1 : 1 ))}} variant='ghost' aria-label='previous page'> 
                         <ChevronDown className='h-4 w-4' />
                     </Button>
 
                     <div className='flex items-center gap-1.5'>
                         {/* We would be using here an input component; Line below comes from the following library: shadcn-ui@latest add input*/}
                         <Input className='w-12 h-8'/>
+                        <p className='text-zinc-700 text-sm space-x-1'>
+                            <span>/</span>
+                            <span>{numPages ?? "x"}</span>
 
+                        </p>
                     </div>
+
+                       {/* Adding a button, varian ghost color*/}
+                       <Button variant='ghost' aria-label='next page'> 
+                        <ChevronUp className='h-4 w-4' />
+                    </Button>
 
                 </div>
             </div>
@@ -68,8 +86,11 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                             variant: 'destructive',
                         })
                      }}
+                     onLoadSuccess={({numPages}) => setNumPages(numPages)}
                      file={url} className='max-h-full'> 
-                        <Page width={width ? width : 1} pageIndex={1}/>
+                        <Page width={width ? width : 1} 
+                        pageNumber={currentPage}
+                        />
 
                     </Document>
                 </div>
