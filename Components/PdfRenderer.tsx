@@ -22,6 +22,9 @@ import {useResizeDetector} from "react-resize-detector"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
+import {useForm} from "react-hook-form"
+import {string, z} from "zod"
+
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
     url: string
@@ -44,6 +47,24 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
     //Destructing the width and the ref element;
     const {width, ref} = useResizeDetector()
 
+    const CustomPageValidator = z.object({
+
+        //num its what the user has input
+        page: z.string().refine((num) => Number(num) > 0 && Number(num) <= numPages!)
+    })
+
+    //Gettting the type from the CustomPageValidator ^
+    //It's a regular Type; 
+    type TCustomPageValidator = z.infer<typeof CustomPageValidator>
+
+    //Passing an object which it would be the TCustomPageValidator^
+    const {} = useForm<TCustomPageValidator>({
+        defaultValues: {
+            page: "1", 
+
+        }
+    })
+
 
     return <div className='w-full bg-white rounded-md shadow flex flex-col items-center'> 
             {/* PDF Options Funtionality */}
@@ -65,7 +86,7 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                     </div>
 
                        {/* Adding a button, varian ghost color*/}
-                       <Button variant='ghost' aria-label='next page'> 
+                       <Button disabled={numPages === undefined || currentPage === numPages} onClick={() => {setCurrentPage((prev) => prev + 1 > numPages! ? numPages! : prev + 1 )}} variant='ghost' aria-label='next page'> 
                         <ChevronUp className='h-4 w-4' />
                     </Button>
 
