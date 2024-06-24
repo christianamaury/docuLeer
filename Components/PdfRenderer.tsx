@@ -2,7 +2,7 @@
 
 //This needs to be a client component ^ Needs to be renderer in the Client side;
 //The Document Component we would get it from the PDF Library
-import {Document, Page, pdfjs} from "react-pdf"
+import {Document, Outline, Page, pdfjs} from "react-pdf"
 //Library for “Suporting for annotations".
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 //Support for Text Layer; 
@@ -25,6 +25,10 @@ import { Input } from "@/components/ui/input";
 import {useForm} from "react-hook-form"
 import {string, z} from "zod"
 
+//Library for the hookform resolvers; 
+import {zodResolver} from "@hookform/resolvers/zod"
+import { cn } from "../lib/utils";
+
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
     url: string
@@ -43,10 +47,6 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
     //By default we would like to be in the 1st page of the Document; 
     const [currentPage, setCurrentPage] = useState<number>(1)
 
-    //This function comes from the react-resize-detector library
-    //Destructing the width and the ref element;
-    const {width, ref} = useResizeDetector()
-
     const CustomPageValidator = z.object({
 
         //num its what the user has input
@@ -58,12 +58,33 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
     type TCustomPageValidator = z.infer<typeof CustomPageValidator>
 
     //Passing an object which it would be the TCustomPageValidator^
-    const {} = useForm<TCustomPageValidator>({
+    const {
+        //Destructing it, using the register Function; 
+        register,
+        handleSubmit, 
+        formState: {errors},
+        setValue
+
+
+    } = useForm<TCustomPageValidator>({
         defaultValues: {
             page: "1", 
-
-        }
+            
+        },
+        resolver: zodResolver(CustomPageValidator),
     })
+
+     //This function comes from the react-resize-detector library
+    //Destructing the width and the ref element;
+    const {width, ref} = useResizeDetector()
+
+    //To handle the page submitting logic;
+    const handlePageSumit  = ({page}: TCustomPageValidator) => {
+            //Setting the current Page we're in; 
+            setCurrentPage(Number(page))
+            setValue("page", String(page))
+
+    }
 
 
     return <div className='w-full bg-white rounded-md shadow flex flex-col items-center'> 
@@ -77,7 +98,19 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
 
                     <div className='flex items-center gap-1.5'>
                         {/* We would be using here an input component; Line below comes from the following library: shadcn-ui@latest add input*/}
-                        <Input className='w-12 h-8'/>
+                        <Input {...register('page')} 
+                        className={cn('w-12 h-8', errors.page && 'focus-visible:ring-red-500')} 
+                        onKeyDown={(e) => {
+                            //If the enter key gets press 3 times
+                            if(e.key === "Enter"){
+                                handleSubmit(handlePageSumit)()
+                            }
+
+
+                        }}
+                        
+                        
+                        />
                         <p className='text-zinc-700 text-sm space-x-1'>
                             <span>/</span>
                             <span>{numPages ?? "x"}</span>
