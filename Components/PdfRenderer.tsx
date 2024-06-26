@@ -12,7 +12,7 @@ import {useState} from 'react'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 //Lucide React Library
-import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown, ChevronUp } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown, ChevronUp, Search } from 'lucide-react'
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
@@ -28,6 +28,7 @@ import {string, z} from "zod"
 //Library for the hookform resolvers; 
 import {zodResolver} from "@hookform/resolvers/zod"
 import { cn } from "../lib/utils";
+import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
@@ -106,7 +107,6 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                                 handleSubmit(handlePageSumit)()
                             }
 
-
                         }}
                         
                         
@@ -124,6 +124,19 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                     </Button>
 
                 </div>
+                {/* Focusing Feature. Creating the zooming effect on the PDF. */}
+                <div className='space-x-2'> 
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button className='gap-1.5' aria-label='zoom' variant='ghost'>
+                                    {/* Adding a search icon to the far right corner of the screen */}
+                                    <Search className='h-4 w-4'/>
+                                </Button>
+                            </DropdownMenuTrigger>
+                        </DropdownMenu>
+                
+                </div>
+
             </div>
 
             <div className='flex-1 w-full max-h-screen'>
