@@ -28,7 +28,7 @@ import {string, z} from "zod"
 //Library for the hookform resolvers; 
 import {zodResolver} from "@hookform/resolvers/zod"
 import { cn } from "../lib/utils";
-import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
@@ -47,6 +47,9 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
     //In order to keep track on which PDF file we're currently in;
     //By default we would like to be in the 1st page of the Document; 
     const [currentPage, setCurrentPage] = useState<number>(1)
+
+    //Creating a focus in effect for the Search icon
+    const [scale, setScale] = useState<number>(1)
 
     const CustomPageValidator = z.object({
 
@@ -131,10 +134,20 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                                 <Button className='gap-1.5' aria-label='zoom' variant='ghost'>
                                     {/* Adding a search icon to the far right corner of the screen */}
                                     <Search className='h-4 w-4'/>
+                                    {/* Adding a dynamic value from our scale const variable */}
+                                    {scale * 100}%<ChevronDown className='h-3 w-3 opacity-50'/>
+
                                 </Button>
                             </DropdownMenuTrigger>
+
+                            <DropdownMenuContent>
+                                <DropdownMenuItem>
+                                    100%
+                                </DropdownMenuItem>
+
+                            </DropdownMenuContent>
                         </DropdownMenu>
-                
+            
                 </div>
 
             </div>
