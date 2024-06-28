@@ -138,14 +138,27 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                                     {scale * 100}%<ChevronDown className='h-3 w-3 opacity-50'/>
 
                                 </Button>
+
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent>
-                                <DropdownMenuItem>
+                                <DropdownMenuItem onSelect={() => setScale(1)}>
                                     100%
                                 </DropdownMenuItem>
 
+                                <DropdownMenuItem onSelect={() => setScale(1.5)}>
+                                    150%
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem onSelect={() => setScale(2)}>
+                                    200%
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem onSelect={() => setScale(2.5)}>
+                                    250%
+                                </DropdownMenuItem>
                             </DropdownMenuContent>
+
                         </DropdownMenu>
             
                 </div>
@@ -170,6 +183,7 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                      file={url} className='max-h-full'> 
                         <Page width={width ? width : 1} 
                         pageNumber={currentPage}
+                        scale={scale}
                         />
 
                     </Document>
