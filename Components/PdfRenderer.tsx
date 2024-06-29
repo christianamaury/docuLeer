@@ -30,6 +30,9 @@ import {zodResolver} from "@hookform/resolvers/zod"
 import { cn } from "../lib/utils";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
+//From the SimpleBar React Library; 
+import SimpleBar from "simplebar-react"
+
 //Declare all the custom properties that we would receive
 interface PdfRenderProps {
     url: string
@@ -166,28 +169,31 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
             </div>
 
             <div className='flex-1 w-full max-h-screen'>
-                <div ref={ref}>
-                    <Document loading={
-                        <div className='flex justify-center'>
-                            <Loader2 className='my-24 h-6 w-6 animate-spin'/>
-                        </div>
-                    }
-                     onLoadError={() => {
-                        toast({
-                            title: 'Hubo un error subiendo tu PDF :(',
-                            description: 'Por favor intentar mas tarde.', 
-                            variant: 'destructive',
-                        })
-                     }}
-                     onLoadSuccess={({numPages}) => setNumPages(numPages)}
-                     file={url} className='max-h-full'> 
-                        <Page width={width ? width : 1} 
-                        pageNumber={currentPage}
-                        scale={scale}
-                        />
+                {/* Adding the Simple Bar from the SimpleBar React Library; */}
+                        <SimpleBar autoHide={false} className='max-h-[calc(100vh-100rem)]'>
+                            <div ref={ref}>
+                                <Document loading={
+                                    <div className='flex justify-center'>
+                                        <Loader2 className='my-24 h-6 w-6 animate-spin'/>
+                                    </div>
+                                }
+                                onLoadError={() => {
+                                    toast({
+                                        title: 'Hubo un error subiendo tu PDF :(',
+                                        description: 'Por favor intentar mas tarde.', 
+                                        variant: 'destructive',
+                                    })
+                                }}
+                                onLoadSuccess={({numPages}) => setNumPages(numPages)}
+                                file={url} className='max-h-full'> 
+                                    <Page width={width ? width : 1} 
+                                    pageNumber={currentPage}
+                                    scale={scale}
+                                    />
 
-                    </Document>
-                </div>
+                                </Document>
+                            </div>   
+                        </SimpleBar>
             </div>
      </div>
 }
