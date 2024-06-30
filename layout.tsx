@@ -6,8 +6,11 @@ import { Inter } from 'next/font/google'
 import {cn} from "../lib/utils"
 import Navbar from "./Components/Navbar"
 import Providers from './Components/Providers'
+
 //Importing the Skeleton CSS library; 
 import "react-loading-skeleton/dist/skeleton.css"
+//Importing the simplebar css library; 
+import "simplebar-react/dist/simplebar.min.css"
 
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { Toaster } from "@/components/ui/toaster"
