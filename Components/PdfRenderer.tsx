@@ -12,7 +12,7 @@ import {useState} from 'react'
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 //Lucide React Library
-import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown, ChevronUp, Search } from 'lucide-react'
+import { Ghost, MessageSquare, Plus, Trash, Loader2, Cloud, File, ChevronDown, ChevronUp, Search, RotateCw } from 'lucide-react'
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
@@ -21,6 +21,9 @@ import { useToast } from "@/components/ui/use-toast"
 import {useResizeDetector} from "react-resize-detector"
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+
+//Importing PdfFullscreen Component
+import PdfFullscreen from "@/app/Components/PdfFullscreen"
 
 import {useForm} from "react-hook-form"
 import {string, z} from "zod"
@@ -53,6 +56,8 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
 
     //Creating a focus in effect for the Search icon
     const [scale, setScale] = useState<number>(1)
+
+    const [rotation, setRotation] = useState<number>(0)
 
     const CustomPageValidator = z.object({
 
@@ -163,14 +168,22 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                             </DropdownMenuContent>
 
                         </DropdownMenu>
-            
+
+                        {/* Rotation Feature */}
+                      <Button onClick={() => setRotation((prev) => prev + 90)} variant='ghost' aria-label='rotate 90 degrees'> 
+                        <RotateCw className='h-4 w-4'/>
+                      
+                      </Button>
+
+                      {/* PDF Fullscreen Component */}
+                      <PdfFullscreen/>
                 </div>
 
             </div>
 
             <div className='flex-1 w-full max-h-screen'>
                 {/* Adding the Simple Bar from the SimpleBar React Library; */}
-                        <SimpleBar autoHide={false} className='max-h-[calc(100vh-100rem)]'>
+                        <SimpleBar autoHide={false} className='max-h-[calc(100vh-10rem)]'>
                             <div ref={ref}>
                                 <Document loading={
                                     <div className='flex justify-center'>
@@ -189,6 +202,7 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                                     <Page width={width ? width : 1} 
                                     pageNumber={currentPage}
                                     scale={scale}
+                                    rotate = {rotation}
                                     />
 
                                 </Document>
