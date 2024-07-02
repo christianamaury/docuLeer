@@ -77,7 +77,11 @@ const PdfFullscreen = ({fileUrl}: PdfFullScreenProps) => {
                                     {/* Mapping through every page that we have */}
                                         {new Array(numPages).fill(0).map((_, i) => (
                                             //Returning a Page Element
-                                            <Page width={}/> 
+                                            <Page 
+                                                key={i}    
+                                                width={width ? width : 1}
+                                                pageNumber={i + 1}
+                                            /> 
 
                                         ))}
 
