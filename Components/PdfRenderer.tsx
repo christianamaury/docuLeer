@@ -104,7 +104,17 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
             <div className='h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2'>
                 <div className='flex items-center gap-1.5'>
                     {/* Adding a button, varian ghost color*/}
-                    <Button disabled = {currentPage <= 1 } onClick={() => {setCurrentPage((prev) => (prev - 1 > 1 ? prev - 1 : 1 ))}} variant='ghost' aria-label='previous page'> 
+                    <Button 
+                    disabled = {currentPage <= 1 } 
+                    onClick={() => {
+                        setCurrentPage((prev) => 
+                        prev - 1 > 1 ? prev - 1 : 1
+                            )
+                            //Modifying Value; 
+                            setValue("page", String(currentPage - 1))
+                        }} 
+                        variant='ghost' 
+                        aria-label='previous page'> 
                         <ChevronDown className='h-4 w-4' />
                     </Button>
 
@@ -130,7 +140,16 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                     </div>
 
                        {/* Adding a button, varian ghost color*/}
-                       <Button disabled={numPages === undefined || currentPage === numPages} onClick={() => {setCurrentPage((prev) => prev + 1 > numPages! ? numPages! : prev + 1 )}} variant='ghost' aria-label='next page'> 
+                       <Button disabled={numPages === undefined || currentPage === numPages} 
+                       onClick={() => {
+                        setCurrentPage((prev) => 
+                        prev + 1 > numPages! ? numPages! : prev + 1
+                            )
+                            //Modifying Value; 
+                            setValue("page", String(currentPage + 1))
+                        }} 
+                        variant='ghost' 
+                        aria-label='next page'> 
                         <ChevronUp className='h-4 w-4' />
                     </Button>
 
@@ -176,7 +195,7 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                       </Button>
 
                       {/* PDF Fullscreen Component */}
-                      <PdfFullscreen/>
+                      <PdfFullscreen fileUrl={url}/>
                 </div>
 
             </div>
