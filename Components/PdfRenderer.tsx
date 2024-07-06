@@ -227,6 +227,7 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                                     pageNumber={currentPage}
                                     scale={scale}
                                     rotate = {rotation}
+                                    key={"@" + renderedScale}
                                     /> : null}
 
                                     <Page className={cn(isLoading ? 'hidden' : '')} 
@@ -234,12 +235,14 @@ const PdfRenderer = ({url}: PdfRenderProps) => {
                                     pageNumber={currentPage}
                                     scale={scale}
                                     rotate = {rotation}
+                                    key={"@" + scale}
                                     loading = {
                                         <div className='flex justify-center'>
                                             {/* Loader 2 icon */}
                                             <Loader2 className='my-24 h-6 2-6 animate-spin'/>
                                         </div>
                                     }
+                                        onRenderSuccess={() => setRenderedScale(scale)}
                                     />
 
                                 </Document>
