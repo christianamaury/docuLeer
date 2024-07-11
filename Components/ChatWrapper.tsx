@@ -13,8 +13,12 @@ import ChatInput from "@/app/Components/chat/ChatInput"
 import {trpc} from "@/app/_trpc/client"
 
 //From the React Library; 
-import {Loader2}  from 'lucide-react'
+import {Loader2, XCircle, ChevronLeft}  from 'lucide-react'
 import { UploadStatus } from '@prisma/client';
+import { buttonVariants } from "@/components/ui/button"
+
+// The following symbol would take the user to the home page: Link '/'
+import Link from 'next/link'
 
 interface ChatWrapperProps {
     fileId: string 
@@ -75,6 +79,31 @@ const ChatWrapper = ({fileId}: ChatWrapperProps) => {
 
     //If its a free user they shouldn't be able to upload PDF more than 5MB; 
     //Handling Failed State; 
+    if(data?.status === 'FAILED') return (
+
+        <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2'> 
+        <div className='flex-1 flex justify-center items-center flex-col mb-28'>
+            <div className='flex flex-col items-center gap-2'> 
+                <XCircle className='h-8 w-8 text-red-500'/>
+                <h3 className='font-semibold text-xl'> Demasiadas paginas dentro de tu documento PDF.. </h3>
+                <p className='text-zinc-500 text-sm'>
+                    Tu <span className='font-medium'> cuenta gratis </span> solo permite hasta 5 paginas dentro del PDF.
+                </p>
+
+                {/* An option for the user to go back to the main menu */}
+                <Link href='/dashboard' className={buttonVariants({
+                    variant: "secondary", 
+                    className: "mt-4", 
+                })}>  
+                <ChevronLeft className='h-3 w-3 mr-1.5'/> De vuelta </Link>
+            </div>
+        </div>
+
+        {/* Chat Input Component, Passing Boolean*/}
+        <ChatInput isDisabled/>
+
+    </div>
+    )
 
     return (
     <div className='relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2'> 
