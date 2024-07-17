@@ -6,9 +6,10 @@ import { UploadThingError } from "uploadthing/server";
 
 //Library for the User Login verification;
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-
 //Importing Prisma db; 
 import {db} from '@/db'
+//langchain community library; 
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
 
 const f = createUploadthing();
  
@@ -62,6 +63,24 @@ export const ourFileRouter = {
         }, 
 
       })
+
+      try {
+        //PDF file in memory 
+          const response = await fetch (`https:/uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`)
+          const blob = await response.blob()
+
+          const loader = new PDFLoader(blob)
+
+          const pageLevelDocs = await loader.load()
+          
+          //Each element from the array; 
+          const pagesAmt = pageLevelDocs.length
+
+          //Vectorizing and indexing the entire document file; 
+
+      } catch (err) {
+
+      }
   
     //   // This code RUNS ON YOUR SERVER after upload
     //   console.log("Upload complete for userId:", metadata.userId);

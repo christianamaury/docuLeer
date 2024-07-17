@@ -35,6 +35,9 @@ interface Props {
 export const ChatContextProvider = ({fileId, children}: Props) => {
 
 const [message, setMessage] = useState<string>('')
+const [isLoading, setIsLoading] = useState<boolean>(false)
+
+
 const {toast} = useToast();
 //API route;
 //Destructing the Function; 
@@ -59,7 +62,11 @@ const {mutate: sendMessage} = useMutation({
 
 //Handling input Changes; 
 //It receives an event; 
-const handleInputChange
+const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+
+    //Setting the message to the e
+    setMessage(e.target.value)
+}
 
 const addMessage = () => sendMessage({message})
 
