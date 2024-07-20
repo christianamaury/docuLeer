@@ -173,7 +173,7 @@ export const POST = async (req: NextRequest) => {
       })
 
       //Real time processing back to the Client; 
-      //Passing through our steam value; 
+      //Passing through our steam value from our API route; 
       return new StreamingTextResponse(stream)
 
 //    if(!userId) {
