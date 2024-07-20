@@ -4,6 +4,9 @@
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
+//Newest Pinecone Implementation way; 
+import {Pinecone} from "@pinecone-database/pinecone"
+
 //Library for the User Login verification;
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 //Importing Prisma db; 
@@ -25,7 +28,13 @@ import { pinecone } from "@/app/lib/pinecone";
 
 
 const f = createUploadthing();
+
+//Testing
+// const pinecone = await getPineconeClient(); 
+
+
  
+
 // const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
  
 // FileRouter for your app, can contain multiple FileRoutes
