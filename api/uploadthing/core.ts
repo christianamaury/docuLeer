@@ -5,11 +5,24 @@ import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
 
 //Library for the User Login verification;
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 //Importing Prisma db; 
 import {db} from '@/db'
 //langchain community library; 
-import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
+import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf"
+
+//Class for generating embedding using the OpenAI API.
+//To access OpenAIEmbeddings embedding models you’ll need to create an OpenAI account, 
+//get an API key, and install the @langchain/openai integration package.
+//Indexing and Retrieval: Embedding models are often used in retrieval-augmented generation (RAG) flows, 
+//both as part of indexing data as well as later retrieving it.
+//import {OpenAIEmbeddings} from "@langchain/embeddings/openai"
+import {OpenAIEmbeddings} from "@langchain/openai"
+//Pinecone Vector Integration;
+import {PineconeStore} from "@langchain/pinecone"
+
+import { pinecone } from "@/app/lib/pinecone";
+
 
 const f = createUploadthing();
  
@@ -77,8 +90,47 @@ export const ourFileRouter = {
           const pagesAmt = pageLevelDocs.length
 
           //Vectorizing and indexing the entire document file; 
+          const pineconeIndex = pinecone.Index("doculeer")
+
+          //Model configuration; 
+          const embeddings = new OpenAIEmbeddings ({
+
+            openAIApiKey: process.env.OPENAI_API_KEY
+          })
+
+          // Receieves two arguments: 
+          //Third argument: Configuration Object
+          await PineconeStore.fromDocuments(pageLevelDocs, embeddings, {
+
+            //@ts-ignore
+              pineconeIndex,
+              namespace: createdFile.id, 
+
+            }
+          )
+
+          //File uploaded to the Database; 
+          await db.file.update({
+            data: {
+              uploadStatus:"SUCCESS"
+            },
+            where: {
+              id: createdFile.id
+            }
+          })
 
       } catch (err) {
+
+        //If there's any error on the uploading process; 
+        await db.file.update({
+          data: {
+            uploadStatus:"FAILED"
+          },
+          where: {
+            id: createdFile.id
+          }
+
+        })
 
       }
   
