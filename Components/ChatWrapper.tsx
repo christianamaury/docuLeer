@@ -5,7 +5,7 @@
 
 //Handle all Chat loading logic; 
 //Importing Message Component; 
-import Message from "@/app/Components/Message" 
+import Messages from "@/app/Components/Messages" 
 
 //Importing ChatInput Component; 
 import ChatInput from "@/app/Components/chat/ChatInput"
@@ -112,7 +112,7 @@ const ChatWrapper = ({fileId}: ChatWrapperProps) => {
         <div className='flex-1 justify-between flex flex-col mb-28'>
 
         {/* Message Component */}
-        <Message/>
+        <Messages fileId={fileId}/>
 
         </div>
 
