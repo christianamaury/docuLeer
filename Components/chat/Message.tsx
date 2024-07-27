@@ -3,6 +3,7 @@ import {ExtendedMessage} from '@/types/message'
 import {Icons} from '@/app/Components/Icons'
 //from the react-markdown library; 
 import ReactMarkdown from 'react-markdown'
+import { format } from "date-fns"
 
 interface MessageProps{
     message: ExtendedMessage
@@ -54,13 +55,28 @@ const Message = ({message, isNextMessageSamePerson}: MessageProps) => {
                                 'text-zinc-50': message.isUserMessage
         
                             })}>
-        
+                            
+                                {message.text}
                             </ReactMarkdown>
 
                     ) : (
 
                         message.text
                     )}
+
+                    {message.id !== 'loading-message' ? (
+                        //Showing when the message was created
+                        <div className={cn('text-xs select-none mt-2 w-full text-right', 
+                            {
+                                'text-zinc-500': !message.isUserMessage,
+                                'text-red-300': message.isUserMessage,
+                            }
+                        
+                        )}>
+                            {format(new Date(message.createdAt), "HH:mm")}
+                        </div>
+
+                    ) : null}
 
                 </div>
 

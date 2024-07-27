@@ -1,8 +1,10 @@
 //This would consume our components; 
-import {ReactNode, createContext, useState, useEffect} from "react";
+import {ReactNode, createContext, useState, useEffect, useRef} from "react";
 //Destructive Notifications, Toast, shadcn/ui library; 
 import { useToast } from "@/components/ui/use-toast"
 import { useMutation } from "@tanstack/react-query";
+import { trpc } from "@/app/_trpc/client";
+import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
 
 //Type of what we want the ChatContext to be; 
 type StreamResponse = {
@@ -37,8 +39,13 @@ export const ChatContextProvider = ({fileId, children}: Props) => {
 const [message, setMessage] = useState<string>('')
 const [isLoading, setIsLoading] = useState<boolean>(false)
 
+//For Optimistic Update purposes; 
+const utils = trpc.useContext()
 
 const {toast} = useToast();
+
+const backupMessage = useRef('')
+
 //API route;
 //Destructing the Function; 
 const {mutate: sendMessage} = useMutation({
@@ -57,6 +64,33 @@ const {mutate: sendMessage} = useMutation({
 
         return response.body
 
+    },
+
+    onMutate: async () => {
+        //Creating backup of the messages for inmediate feedback
+        backupMessage.current = message
+        setMessage('')
+
+        //Canceling any outgoing refresh it;
+        await utils.getFileMessages.cancel()
+
+        //snapshot previous value that we had..
+        const previousMessages = utils.getFileMessages.getInfiniteData()
+
+        //Optimistically insert the new value; 
+        utils.getFileMessages.setInfiniteData({fileId, limit: INFINITE_QUERY_LIMIT}, 
+            (old) => {
+                //If there's no old data
+                if(!old){
+                   return {
+                    pages: [],
+                    pageParams: []
+                   }
+                }
+                
+                let newPages = [...old.pages]
+            }     
+      )
     },
 })
 

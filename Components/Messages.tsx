@@ -51,7 +51,7 @@ const Messages = ({fileId}: MessagesProps) =>
     //..Combining...all Messages all Together;
     const combinedMessages = [
         ...(true ? [loadingMessage] : []),
-        ...(messages ?? [])
+        ...(messages ?? []),
     ]
 
     //Fetching messages from the database; 

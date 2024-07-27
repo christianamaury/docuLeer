@@ -26,7 +26,7 @@ const {addMessage, handleInputChange, isLoading, message, } = useContext (ChatCo
 
     return (
     <div className='absolute bottom-0 left-0 w-full'>
-        <form className='mx-2 flex flex-row gap-3 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl'>
+        <div className='mx-2 flex flex-row gap-3 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl'>
             <div className='relative flex h-full flex-1 items-stretch md:flex-col'> 
                 <div className='relative flex flex-col w-full flex-grow p-4'>
                     <div className='relative'>
@@ -43,7 +43,7 @@ const {addMessage, handleInputChange, isLoading, message, } = useContext (ChatCo
                         }} placeholder='Ingresa tu pregunta..' className='resize-none pr-12 text-base py-3 scrollbar-thumb-red scrollbar-thumb-rounded scrollbar-track-red-lighter scrollbar-w-2 scrolling-touch' /> 
                    
                         {/* Button should be disabled if we're loading or getting data from our API*/}
-                         <Button disabled={isLoading || isDisabled } className='absolute bottom-1.5 right-[8px]' aria-label = 'send message' type='submit' onClick={
+                         <Button disabled={isLoading || isDisabled } className='absolute bottom-1.5 right-[8px]' aria-label = 'send message' onClick={
                             () => {
 
                                 addMessage()
@@ -56,7 +56,7 @@ const {addMessage, handleInputChange, isLoading, message, } = useContext (ChatCo
                     </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
     )
 }
