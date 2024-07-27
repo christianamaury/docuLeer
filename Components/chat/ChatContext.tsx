@@ -66,7 +66,7 @@ const {mutate: sendMessage} = useMutation({
 
     },
 
-    onMutate: async () => {
+    onMutate: async ({message}) => {
         //Creating backup of the messages for inmediate feedback
         backupMessage.current = message
         setMessage('')
@@ -89,9 +89,48 @@ const {mutate: sendMessage} = useMutation({
                 }
                 
                 let newPages = [...old.pages]
+
+                let latestPages = newPages[0]!
+
+                latestPages.messages = [
+                    {
+                        createdAt: new Date().toISOString(), 
+                        id: crypto.randomUUID(),
+                        text: message, 
+                        isUserMessage: true
+                    }, 
+                    ...latestPages.messages
+                ]
+
+                //Changing the Data  
+                newPages[0] = latestPages   
+
+                return {
+                    ...old, 
+                    //overriding pages with the new ones;
+                    pages: newPages,
+                }
             }     
       )
+
+            setIsLoading(true)
+
+            //returning previous ;
+            return {
+                previousMessages: previousMessages?.pages.flatMap((page) => page.messages) ?? [],
+            }
     },
+
+    //We dont want 1st or either 2nd arguments, just the 3rd one;
+    onError: (_, __, context) => {
+        setMessage(backupMessage.current)
+        utils.getFileMessages.setData(
+            {fileId},
+            {messages: context?.previousMessages ?? []}
+        )
+    },
+
+    
 })
 
 //Handling input Changes; 
