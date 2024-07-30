@@ -6,6 +6,8 @@ import {INFINITE_QUERY_LIMIT} from '@/config/infinite-query'
 import { Ghost, MessageSquare, Plus, Trash, Loader2, Send } from 'lucide-react'
 import Skeleton from 'react-loading-skeleton'
 import Message from './chat/Message'
+import { useContext } from 'react'
+import { ChatContext } from './chat/ChatContext'
  
 //Defining MessageProps; 
 interface MessagesProps {
@@ -15,6 +17,9 @@ interface MessagesProps {
 
 const Messages = ({fileId}: MessagesProps) => 
 {
+    //Destructing
+    const {isLoading: isAIThinking } = useContext(ChatContext)
+
     //Destructing from trcp
     //passing an Object;
     const {data, isLoading, fetchNextPage} = trpc.getFileMessages.useInfiniteQuery({
@@ -50,7 +55,7 @@ const Messages = ({fileId}: MessagesProps) =>
 
     //..Combining...all Messages all Together;
     const combinedMessages = [
-        ...(true ? [loadingMessage] : []),
+        ...(isAIThinking ? [loadingMessage] : []),
         ...(messages ?? []),
     ]
 

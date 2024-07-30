@@ -5,6 +5,7 @@ import { useToast } from "@/components/ui/use-toast"
 import { useMutation } from "@tanstack/react-query";
 import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
+import { map } from "zod";
 
 //Type of what we want the ChatContext to be; 
 type StreamResponse = {
@@ -121,6 +122,71 @@ const {mutate: sendMessage} = useMutation({
             }
     },
 
+    //Receiving string variable: stream
+    onSuccess: async (stream) => {
+
+        setIsLoading(false)
+
+        if(!stream){
+        //Returning Toast notification for the user;
+        return toast({
+            title: "Hubo un problema enviando este mensaje.",
+            description: "Por favor, haga refresh a la página y intente de nuevo.",
+            variant: "destructive"
+            })
+        }
+            //Reading context of it;
+            //Decodng it
+            const reader = stream.getReader()
+            const decoder = new TextDecoder()
+            let done = false
+
+            //Initializing accumulative response; 
+            //Empty string by Default;
+            let accResponse = ''
+
+            while(!done){
+                //Reading stram
+                const {value, done: doneReading} = await reader.read()
+                done = doneReading
+
+                //Getting string context
+                const chunkValue = decoder.decode(value)
+
+                accResponse += chunkValue
+
+                //Append the chunk variabl.e to the actual game; 
+                //Destruct the fileId;
+                utils.getFileMessages.setInfiniteData(
+                    {fileId, limit: INFINITE_QUERY_LIMIT},
+                    (old) => {
+                        if(!old) return {pages: [], pageParams: []}
+
+                        //Returns a Boolean;
+                        //For each page in the Old Data;
+                        let isAiResponseCreated = old.pages.some((page) => page.messages.some((message) => message.id === "ai-response"))
+
+                        let updatedPages = old.pages.map((page) => {
+                            if(page === old.pages[0]) {
+                                let updatedMessage
+
+                                if(!isAiResponseCreated){
+                                    updatedMessages = [
+                                        {
+                                            
+                                        }
+                                    ]
+                                }
+
+                            }
+
+                        })
+
+                    }
+                )
+            }
+    },
+
     //We dont want 1st or either 2nd arguments, just the 3rd one;
     onError: (_, __, context) => {
         setMessage(backupMessage.current)
@@ -130,7 +196,14 @@ const {mutate: sendMessage} = useMutation({
         )
     },
 
-    
+    onSettled: async () => {
+        //We refresh the entire Data; 
+        setIsLoading(false)
+
+        await utils.getFileMessages.invalidate({
+            fileId
+        })
+    },
 })
 
 //Handling input Changes; 
