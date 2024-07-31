@@ -6,8 +6,11 @@ import {INFINITE_QUERY_LIMIT} from '@/config/infinite-query'
 import { Ghost, MessageSquare, Plus, Trash, Loader2, Send } from 'lucide-react'
 import Skeleton from 'react-loading-skeleton'
 import Message from './chat/Message'
-import { useContext } from 'react'
+import { useContext, useEffect, useRef } from 'react'
 import { ChatContext } from './chat/ChatContext'
+
+//Froom the @manite/hooks library; 
+import {useIntersection} from '@mantine/hooks'
  
 //Defining MessageProps; 
 interface MessagesProps {
@@ -59,6 +62,23 @@ const Messages = ({fileId}: MessagesProps) =>
         ...(messages ?? []),
     ]
 
+    //Assigning ref to track of; 
+    const lastMessageRef = useRef<HTMLDivElement>(null);
+
+    //Destructing the ref & Entry;
+    const {ref, entry} = useIntersection({
+        root: lastMessageRef.current, 
+        threshold: 1
+    })
+
+    useEffect( () => {
+        if(entry?.isIntersecting){
+            // This function allows to fetch the next page of "Results";
+            fetchNextPage()
+        }
+    }, [entry, fetchNextPage])
+
+
     //Fetching messages from the database; 
     return <div className='flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-red scrollbar-thumb-rounded scrollbar-track-red-lighter scrollbar-w-2 scrolling-touch'> 
     {/* Mapping for each message */}
@@ -72,7 +92,7 @@ const Messages = ({fileId}: MessagesProps) =>
 
         //If its the last element 
         if(i === combinedMessages.length - 1){
-            return <Message message={message} isNextMessageSamePerson={isNextMessageSamePerson} key={message.id}/>
+            return <Message ref={ref} message={message} isNextMessageSamePerson={isNextMessageSamePerson} key={message.id}/>
 
         }
         //If we're not rendering the last element; 

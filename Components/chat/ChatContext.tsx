@@ -168,19 +168,46 @@ const {mutate: sendMessage} = useMutation({
 
                         let updatedPages = old.pages.map((page) => {
                             if(page === old.pages[0]) {
-                                let updatedMessage
+                                let updatedMessages
 
                                 if(!isAiResponseCreated){
                                     updatedMessages = [
                                         {
-                                            
-                                        }
+                                            createdAt: new Date().toISOString(),
+                                            // This gonna be the hardcoded AI response;
+                                            id: "ai-response",
+                                            text: accResponse,
+                                            isUserMessage: false
+                                        },
+                                        ...page.messages
                                     ]
+                                } else {
+                                    // Adding if there's already an AI response; 
+                                    updatedMessages = page.messages.map((message) => {
+                                        if(message.id === "ai-response") {
+                                            return {
+                                                // Returning message properties that were there before;
+                                                ...message, 
+                                                text: accResponse
+                                            }
+                                        }
+
+                                        return message
+                                    })
+
+                                }
+                                // Returning an Object;
+                                return {
+                                    ...page, 
+                                    messages: updatedMessages
                                 }
 
                             }
-
+                            return page
                         })
+
+                        // overriting old messages with newMessages; 
+                        return { ...old, pages: updatedPages}
 
                     }
                 )

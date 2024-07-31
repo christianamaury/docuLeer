@@ -4,6 +4,10 @@ import {Icons} from '@/app/Components/Icons'
 //from the react-markdown library; 
 import ReactMarkdown from 'react-markdown'
 import { format } from "date-fns"
+import { forwardRef } from "react"
+
+//NOTE: In normal React, you cannot pass a Ref as a Props;
+//Used forwardRef to pass the Ref as a Component; 
 
 interface MessageProps{
     message: ExtendedMessage
@@ -12,10 +16,10 @@ interface MessageProps{
 }
 
 //Properties for the component
-const Message = ({message, isNextMessageSamePerson}: MessageProps) => {
+const Message = forwardRef<HTMLDivElement, MessageProps>(({message, isNextMessageSamePerson}, ref) => {
 
     return (
-        <div className={cn('flex items-end', {
+        <div ref={ref} className={cn('flex items-end', {
          "justify-end" : message.isUserMessage, 
 
         })}>
@@ -86,6 +90,6 @@ const Message = ({message, isNextMessageSamePerson}: MessageProps) => {
 
     )
 
-}
+})
 
 export default Message
