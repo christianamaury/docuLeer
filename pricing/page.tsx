@@ -1,10 +1,12 @@
 import MaxWidthWrapper from "@/app/Components/MaxWidthWrapper";
+import UpgradeButton from "../Components/UpgradeButton";
+import { buttonVariants } from "@/components/ui/button";
 import { TooltipProvider, TooltipContent, Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
 import { PLANS } from "@/config/stripe";
 import { cn } from "@/lib/utils";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
-import { Check, HelpCircle, Minus } from "lucide-react";
-
+import { ArrowRight, Check, HelpCircle, Minus } from "lucide-react";
+import Link from "next/link";
 
 const Page = async () => {
 
@@ -129,7 +131,7 @@ const Page = async () => {
                                             <div className='flex items-center space-x-1'>
                                                 <p>
                                                     {/* Converting numeric value to Local String; */}
-                                                    {quota.toLocaleString()} archivos de PDF's por cada mes. 
+                                                    {quota.toLocaleString()} archivos de PDFs por cada mes. 
                                                 </p>
 
                                                 {/* A 300 seconds delay for the trigger */}
@@ -140,7 +142,7 @@ const Page = async () => {
                                                   </TooltipTrigger>
                                                     <TooltipContent className='w-80 p-2'>
                                                         {/* Once the user hove on top the icon, it would explaining for them; */}
-                                                            La cantidad de documentos PDF's que puedes subir por mes.
+                                                            La cantidad de documentos PDFs que puedes subir por mes.
                                                     </TooltipContent>
 
                                                 </Tooltip>
@@ -161,12 +163,77 @@ const Page = async () => {
                                                     </div>
 
                                                     {/* Checking to see if we actually have a Footnote; */}
+                                                    {footnote ? (
+                                                        <div className='flex items-center space-x-1'>
+                                                            <p className={cn("text-gray-400", {
+                                                                'text-gray-600':
+                                                                negative, 
+
+                                                              })}>
+                                                                {/* Rendering the text; */}
+                                                                {text}
+                                                            </p>
+
+                                                            <Tooltip delayDuration={300}>
+                                                                <TooltipTrigger className='cursor-default ml-1.5'>
+                                                                    {/* Lucide HelpCircle icon */}
+                                                                    <HelpCircle className='h-4 w-4 text-zinc-500'/>
+                                                                </TooltipTrigger>
+                                                                    <TooltipContent className='w-80 p-2'>
+                                                                        {/* Once the user hove on top the icon, it would explaining for them; */}
+                                                                        {footnote}
+                                                                    </TooltipContent>
+                                                            </Tooltip>
+
+                                                        </div>
+                                                    ) : (  
+                                    
+                                                        <p className={cn("text-gray-400", {
+                                                        'text-gray-600':
+                                                        negative, 
+
+                                                      })}>
+                                                        {/* Rendering the text; */}
+                                                        {text}
+                                                    </p>
+                                                    )}
                                                 
                                                 </li>
-
                                             ))}
 
                                         </ul>
+
+                                        <div className='border-t border-gray-200'/>
+                                            <div className='p-5'>
+                                                {/* Conditional Checking; */}
+                                                {plan === "Free" ? (
+
+                                                    <Link href={user ? '/dashboard': '/sign-in'} className={buttonVariants({
+                                                        className: 'w-full',
+                                                        variant: 'secondary',
+                                                    })}>
+                                                        {/* If we have an user, inside the button: upgrade now. Previously it could be Upgrade Now or Sign Up */}
+                                                        {user ? "Actualiza tu cuenta ahora" : "Registrate Ahora"}
+                                                        <ArrowRight className='h-5 w-5 ml-1.5'/>
+
+                                                    </Link>
+
+                                                ) : user ? (
+                                                    //If there's an user, there would be a button to upgrade
+                                                    // Adding custom Upgrade Component;
+                                                    <UpgradeButton/>
+
+                                                ) : (
+                                                    <Link href='/sign-in' className={buttonVariants({
+                                                        className: 'w-full'
+                                                    })}>
+                                                        {/* If we have an user, inside the button: upgrade now. Previously it could be Upgrade Now or Sign Up */}
+                                                        {user ? "Actualiza tu cuenta ahora" : "Registrate Ahora"}
+                                                        <ArrowRight className='h-5 w-5 ml-1.5'/>
+
+                                                    </Link>
+                                                )}
+                                             </div>
 
                                    </div>
 
