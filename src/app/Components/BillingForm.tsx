@@ -8,6 +8,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
 import { format } from "date-fns"
+import { stat } from "fs"
 
 interface BillingFormProps {
 
@@ -22,7 +23,9 @@ const BillingForm = ({subscriptionPlan, }: BillingFormProps) => {
 
     //Alternative page for the pricing page
     //isLoading variable needs to be false
-    const {mutate: createStripeSession, isLoading} = trpc.createStripeSession.useMutation({
+    //Changed the isLoading for status
+    //useMutation is a hook function, you can define variables in a configuration Object; 
+    const {mutate: createStripeSession, status} = trpc.createStripeSession.useMutation({
         // Destructing url
         onSuccess: ({url}) => {
             if(url) window.location.href = url
@@ -35,8 +38,9 @@ const BillingForm = ({subscriptionPlan, }: BillingFormProps) => {
                 })
             }
         },
-
     })
+
+    const isLoading = status === "pending";
     
     return <MaxWidthWrapper className='max-w-5xl'>
 
