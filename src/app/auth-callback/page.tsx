@@ -1,4 +1,8 @@
 "use client"
+
+//Ensure it's only rendered at a runtime interval;
+export const dynamic = "force-dynamic";
+
 //router navigation; 
 import {useRouter, useSearchParams} from 'next/navigation'
 import { trpc } from '../_trpc/client'
