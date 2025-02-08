@@ -7,7 +7,7 @@ import { trpc } from "@/app/_trpc/client";
 import { INFINITE_QUERY_LIMIT } from "@/config/infinite-query";
 import { map } from "zod";
 
-//Type of what we want the ChatContext to be; 
+//Type of variables handle that we would want our ChatContext to have; 
 type StreamResponse = {
 
        //Function to add a Message; returns void
