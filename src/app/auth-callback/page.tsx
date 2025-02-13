@@ -7,6 +7,7 @@ export const dynamic = "force-dynamic";
 import {useRouter, useSearchParams} from 'next/navigation'
 import { trpc } from '../_trpc/client'
 import { Loader2 } from 'lucide-react'
+import { useEffect } from 'react';
 //Getting the origin dashboard reference for th euser
 //This Page automatically once its load to the user
 
@@ -43,7 +44,9 @@ const Page = () => {
         retryDelay: 500, 
 
     });
+
     //Checking if there's any errors in the Results of the Query;
+    useEffect(() => {
     if(query.error){
         const errData = query.error.data;
         if(errData?.code === 'UNAUTHORIZED'){
@@ -55,12 +58,15 @@ const Page = () => {
         }
 
     }
+    
     //If data is succeded, back to the main Dashboard; 
     // if(query.data?.success) 
     if(query.data?.success){
         router.push(origin ? `${origin}` : '/dashboard');
 
     }
+
+}, [query.error, query.data, origin, router])
 
     return (
         <div className='w-full mt-24 flex justify-center'>
