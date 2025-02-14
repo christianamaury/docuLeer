@@ -4,14 +4,14 @@
 export const dynamic = "force-dynamic";
 
 //router navigation; 
+import { useEffect, Suspense } from 'react';
 import {useRouter, useSearchParams} from 'next/navigation'
 import { trpc } from '../_trpc/client'
 import { Loader2 } from 'lucide-react'
-import { useEffect } from 'react';
 //Getting the origin dashboard reference for th euser
 //This Page automatically once its load to the user
 
-const Page = () => {
+const AuthCallbackContent = () => {
 
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -79,5 +79,15 @@ const Page = () => {
     )
 
 }
+
+//Wrapping the Content with a Suspense
+const Page = () => {
+    return (
+        <Suspense fallback={null}>
+            <AuthCallbackContent/>
+        </Suspense>
+    )
+}
+
 
 export default Page
