@@ -9,9 +9,14 @@ import Link from 'next/link'
 import {ArrowRight} from "lucide-react"
 
 //You need to import the LoginLink framework in order to use this class; 
-import {LoginLink, RegisterLink} from '@kinde-oss/kinde-auth-nextjs/server'
+import {LoginLink, RegisterLink, getKindeServerSession} from '@kinde-oss/kinde-auth-nextjs/server'
 
 const Navbar = () => {
+
+    //Determined login user; 
+    const {getUser} = getKindeServerSession()
+    const user = getUser()
+
 
     return (
     <nav className='sticky h-14 inset-x-0-top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -24,12 +29,13 @@ const Navbar = () => {
                 {/* Mobile Navigation */}
 
                 <div className='hidden items-center space-x-4 sm:flex'>
-                    <>
+                {   
+                    !user ? <>
                         <Link href= '/pricing' className={buttonVariants({
                             variant: "ghost",
                             size: 'sm',
 
-                        })}> Pricing 
+                        })}> Precios 
                         </Link>
                         <LoginLink className={buttonVariants({
                             variant: "ghost",
@@ -46,7 +52,19 @@ const Navbar = () => {
                             Registrate <ArrowRight className='ml-1.5 h-5 w-5'/>
                         </RegisterLink>
                     
+                    </>: <>
+
+                    <Link href= '/dashboard' className={buttonVariants({
+                            variant: "ghost",
+                            size: 'sm',
+
+                        })}> Dashboard 
+                   </Link>
+
+                   <UserAccountNav/>
+                        
                     </>
+                }
 
                 </div>
 
