@@ -1,5 +1,6 @@
 import { buttonVariants } from '@/components/ui/button';
 import MaxWidthWrapper from '../Components/MaxWidthWrapper'
+import UserAccountNav from '../Components/UserAccountNav'
 //We would be adding our product logo in the NavBar; 
 //In order to use the link anchor feature;
 // The following symbol would take the user to the home page: Link '/'
@@ -11,12 +12,11 @@ import {ArrowRight} from "lucide-react"
 //You need to import the LoginLink framework in order to use this class; 
 import {LoginLink, RegisterLink, getKindeServerSession} from '@kinde-oss/kinde-auth-nextjs/server'
 
-const Navbar = () => {
+const Navbar = async () => {
 
     //Determined login user; 
     const {getUser} = getKindeServerSession()
-    const user = getUser()
-
+    const user = await getUser()
 
     return (
     <nav className='sticky h-14 inset-x-0-top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -61,7 +61,17 @@ const Navbar = () => {
                         })}> Dashboard 
                    </Link>
 
-                   <UserAccountNav/>
+                   <UserAccountNav 
+                   name={
+                    !user.given_name || !user.family_name ? "Tú Cuenta" : `${user.given_name} ${user.family_name}`
+
+                   }
+                   
+                   email={user.email ?? ''}
+
+                   imageUrl={user.picture ?? ''}
+                   
+                   />
                         
                     </>
                 }

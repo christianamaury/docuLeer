@@ -2,8 +2,9 @@
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { getUserSubscriptionPlan } from "../lib/stripe"
 import { Button } from "@/components/ui/button"
-import { Avatar } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import Image from "next/image"
+import { Icons } from "./Icons"
 
 //Passing props, type userAccountNav
 interface UserAccountNavProps {
@@ -29,14 +30,18 @@ const UserAccountNav = async ({email, imageUrl, name}: UserAccountNavProps) => {
 
                             </div>
 
-                        ): (
+                        ): 
                             //If we don't have an image for this user..  
-
-                        )} 
-
-                        
+                            <AvatarFallback>
+                                {/* Screen Readers would be able to see the name */}
+                                <span className='sr-only'>
+                                    {name}
+                                    <Icons.user className='h-4 w-4 text-zinc-900'/>
+                                </span>
+                                
+                            </AvatarFallback>
+                        } 
                     </Avatar>
-
                 </Button>
             </DropdownMenuTrigger>
 
