@@ -9,7 +9,7 @@ import Link from "next/link"
 import { Gem } from "lucide-react"
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components"
 
-//Passing props, type userAccountNav
+//Passing props, type userAccountNav..
 interface UserAccountNavProps {
 
     email: string | undefined
