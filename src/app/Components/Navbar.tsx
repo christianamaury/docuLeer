@@ -1,6 +1,7 @@
 import { buttonVariants } from '@/components/ui/button';
 import MaxWidthWrapper from '../Components/MaxWidthWrapper'
 import UserAccountNav from '../Components/UserAccountNav'
+import MobileNav from '../Components/MobileNav'
 //We would be adding our product logo in the NavBar; 
 //In order to use the link anchor feature;
 // The following symbol would take the user to the home page: Link '/'
@@ -27,6 +28,8 @@ const Navbar = async () => {
                 </Link>
 
                 {/* Mobile Navigation */}
+                <MobileNav isAuth={!!user}/>
+
 
                 <div className='hidden items-center space-x-4 sm:flex'>
                 {   
@@ -66,7 +69,7 @@ const Navbar = async () => {
                     !user.given_name || !user.family_name ? "Tú Cuenta" : `${user.given_name} ${user.family_name}`
 
                    }
-                   
+
                    email={user.email ?? ''}
 
                    imageUrl={user.picture ?? ''}
