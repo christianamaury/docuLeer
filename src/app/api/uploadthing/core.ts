@@ -25,6 +25,8 @@ import {OpenAIEmbeddings} from "@langchain/openai"
 import {PineconeStore} from "@langchain/pinecone"
 
 import { pinecone } from "@/app/lib/pinecone";
+import { getUserSubscriptionPlan } from "@/app/lib/stripe";
+import { PLANS } from "@/config/stripe";
 
 
 const f = createUploadthing();
@@ -36,25 +38,21 @@ const f = createUploadthing();
  
 
 // const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
- 
-// FileRouter for your app, can contain multiple FileRoutes
-export const ourFileRouter = {
-  // Define as many FileRoutes as you like, each with a unique routeSlug
-  // MaxFile can be increased if the user is a pro user
-  pdfUploader: f({ pdf: { maxFileSize: "4MB" } })
 
-    // Set permissions and file types for this FileRoute
-    //It would run whenver someone has requested to uplaod a File; User -> MW(middleware)
-    .middleware(async ({ req }) => {
 
-        //Only authenticate user can upload a file
+const middleware = async () => {
+
+    //Only authenticate user can upload a file
         //Checking from KindleSession;
         const {getUser} = await getKindeServerSession()
         const user = await getUser()
 
         //I can also try to use the following TRCP Error: throw new TRPCError({code: 'UNAUTHORIZED'})
         if(!user || !user.id) throw new Error("Unauthorized")
-      
+
+        //Checking user Subscription Plan; 
+        const subscriptionPlan = await getUserSubscriptionPlan()
+
         // This code runs on your server before upload
         //const user = await auth(req);
  
@@ -64,12 +62,29 @@ export const ourFileRouter = {
         // Whatever is returned here is accessible in onUploadComplete as `metadata`
         //return { userId: user.id };
         //Passing the user information;
-        return {userId: user.id}
-  
-    })
+        return {subscriptionPlan, userId: user.id}
+}
 
-    //It runs when the file has been upload successfully; 
-    .onUploadComplete(async ({ metadata, file }) => {
+const onUploadComplete = async ({metadata, file}: {
+   //Declaring the types; 
+   //Getting the information of the middleware function returns above;
+   metadata: Awaited <ReturnType<typeof middleware>>
+   file: {
+    key: string
+    name: string
+   }
+
+}) => {
+
+      //Check statement so we don't call the createdFile twice; 
+      //Checking if the file exist;
+      const isFileExist = await db.file.findFirst({
+        where: {
+          key: file.key,
+        },
+      })
+
+      if(isFileExist) return 
 
       //Adding the files using Prisma; 
       //medata.userId is pass through the .middleware; 
@@ -87,8 +102,10 @@ export const ourFileRouter = {
       })
 
       try {
+
         //PDF file in memory 
           const response = await fetch (`https:/uploadthing-prod.s3.us-west-2.amazonaws.com/${file.key}`)
+
           const blob = await response.blob()
 
           const loader = new PDFLoader(blob)
@@ -97,6 +114,30 @@ export const ourFileRouter = {
           
           //Each element from the array; 
           const pagesAmt = pageLevelDocs.length
+
+          //Destruct subscriptionPlan from the metadata;
+          const {subscriptionPlan} = metadata
+          const {isSubscribed} = subscriptionPlan
+
+          //Did they exceeded it .. If its true; plan exceeded
+          const isProExceeded = pagesAmt > PLANS.find((plan) => plan.name === "Pro")!.pagesPerPDF
+
+          // Free plan can be change. 
+          const isFreeExceeded = pagesAmt > PLANS.find((plan) => plan.name === "Free")!.pagesPerPDF
+
+          //..Subcription plan from the user; 
+          if((isSubscribed && isProExceeded || !isSubscribed && isFreeExceeded)){
+
+            //Passing data that we would like to update.. 
+            await db.file.update({
+                data: {
+                  uploadStatus: "FAILED"
+                }, 
+                where: {
+                  id: createdFile.id,
+                },
+            }) 
+          }
 
           //Vectorizing and indexing the entire document file; 
           const pineconeIndex = pinecone.Index("doculeer")
@@ -150,10 +191,33 @@ export const ourFileRouter = {
  
     //   // !!! Whatever is returned here is sent to the clientside `onClientUploadComplete` callback
     //   return { uploadedBy: metadata.userId };
+ 
+}
+ 
+// FileRouter for your app, can contain multiple FileRoutes
+export const ourFileRouter = {
+  // Define as many FileRoutes as you like, each with a unique routeSlug
+  // MaxFile can be increased if the user is a pro user
+  freePlanUploader: f({ pdf: { maxFileSize: "4MB" } })
 
+    // Set permissions and file types for this FileRoute
+    //It would run whenver someone has requested to uplaod a File; User -> MW(middleware)
+    .middleware(middleware)
 
-    
-    }),
+    //It runs when the file has been upload successfully; 
+    .onUploadComplete(onUploadComplete),
+
+      // Define as many FileRoutes as you like, each with a unique routeSlug
+  // MaxFile can be increased if the user is a pro user
+  proPlanUploader: f({ pdf: { maxFileSize: "16MB" } })
+
+  // Set permissions and file types for this FileRoute
+  //It would run whenver someone has requested to uplaod a File; User -> MW(middleware)
+  .middleware(middleware)
+
+  //It runs when the file has been upload successfully; 
+  .onUploadComplete(onUploadComplete),
+
 } satisfies FileRouter;
  
 export type OurFileRouter = typeof ourFileRouter;
