@@ -29,7 +29,8 @@ import { useRouter } from 'next/navigation'
 //Passin props on the div
 //onDrop{} to check if it was successful
 //PDF(4MB) section would dynamically change depending if the user is a Pro one. Pro would be 16MB
-const UploadDropzone = () => {
+//Adding a Prop;
+const UploadDropzone = ({isSubscribed,}: {isSubscribed: boolean}) => {
 
     //Accesing our Router;
     const router = useRouter()
@@ -44,7 +45,10 @@ const UploadDropzone = () => {
    const {toast} = useToast()
 
     //Destructing the startUpload function from the uploadthing hook;
-    const {startUpload} = useUploadThing("pdfUploader")
+    const {startUpload} = useUploadThing(
+        // If its true, we know its a prop user;
+        isSubscribed ? "proPlanUploader" : "freePlanUploader"
+    )
 
     //In order to make it trigger, we need to pass the mutate
     const {mutate: startPolling} = trpc.getFile.useMutation({
@@ -123,8 +127,6 @@ const UploadDropzone = () => {
             })
         }
 
-
-
         //This would DELAY EFFECT for the user Progress loading bar. IT CAN BE REMOVED;
         //await new Promise((resolve) => setTimeout(resolve, 1500))
 
@@ -150,7 +152,7 @@ const UploadDropzone = () => {
                                 </p>
 
                                 <p className='text-xs text-zinc-500'> 
-                                    PDF (hasta 4MB)
+                                    PDF (hasta {isSubscribed ? "16" : "4"} MB)
                                 </p>
 
                             </div>
@@ -205,7 +207,7 @@ const UploadDropzone = () => {
 }
 
 
-const UploadButton = () => {
+const UploadButton = ({isSubscribed,}: {isSubscribed: boolean}) => {
     //By default would set to False
      const [isOpen, setIsOpen] = useState<boolean>(false)
      
@@ -222,7 +224,7 @@ const UploadButton = () => {
 
             <DialogContent>
                     {/*Custom Component*/}
-                    <UploadDropzone/>
+                    <UploadDropzone isSubscribed ={isSubscribed}/>
             </DialogContent>
         </Dialog>
      )

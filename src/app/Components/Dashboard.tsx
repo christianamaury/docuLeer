@@ -16,12 +16,16 @@ import Link from 'next/link'
 //"MMM yyyy" = Month & Year Reference; 
 import {format} from "date-fns"
 import { Button } from '@/components/ui/button'
+import { getUserSubscriptionPlan } from '../lib/stripe'
 
 //Everytime that we map over something, we need a: key;
 //This color on the mapping area needs to be updated: from-cyan-500 to-blue-500(Just for Testing)
 
+interface PageProps {
+    subscriptionPlan: Awaited<ReturnType<typeof getUserSubscriptionPlan>>
+}
 
-const Dashboard = () => {
+const Dashboard = ({subscriptionPlan}: PageProps) => {
     // return (<div> Hello Sr. </div>)
 
     //In order to check which file is being deleted it. 
@@ -70,7 +74,7 @@ const Dashboard = () => {
                     Mis Documentos
                 </h1>
 
-                <UploadButton/>
+                <UploadButton isSubscribed={subscriptionPlan.isSubscribed} />
 
             </div>
             

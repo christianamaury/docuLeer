@@ -28,14 +28,10 @@ import { pinecone } from "@/app/lib/pinecone";
 import { getUserSubscriptionPlan } from "@/app/lib/stripe";
 import { PLANS } from "@/config/stripe";
 
-
 const f = createUploadthing();
 
 //Testing
 // const pinecone = await getPineconeClient(); 
-
-
- 
 
 // const auth = (req: Request) => ({ id: "fakeId" }); // Fake auth function
 
