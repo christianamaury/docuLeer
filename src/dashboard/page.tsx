@@ -8,6 +8,7 @@ import {redirect} from 'next/navigation'
 import {db} from '@/db'
 //Dashboard Component: 
 import Dashboard from '../app/Components/Dashboard'
+import { getUserSubscriptionPlan } from "@/app/lib/stripe"
 //!user doesn't exist, redirect them if theyre not signed in
 //I also added the await method to the getKindeServerSession method()
 
@@ -29,8 +30,10 @@ const Page = async () => {
     //Use it for testing purposes, to make sure the user is signed in.
     //return <div> {user.email} </div>
 
+    const subscriptionPlan = await getUserSubscriptionPlan()
+
     //Dashboard Component
-    return <Dashboard />
+    return <Dashboard subscriptionPlan={subscriptionPlan} />
      
 }
 
