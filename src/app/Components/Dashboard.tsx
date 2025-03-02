@@ -32,8 +32,6 @@ const Dashboard = ({subscriptionPlan}: PageProps) => {
     //It would be a string or null value; Default value = null
     const [currentlyDeletingFile, setCurrentlyDeletingFile] = useState<string | null> (null)
 
-
-
     //Validate to enforce to refresh the data right at the moment; 
     //TEST SINCE useContext has depreceated it;
     const utils = trpc.useContext()
