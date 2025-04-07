@@ -1,7 +1,7 @@
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { TRPCError, initTRPC } from '@trpc/server';
 
-//publicProcedure it allow us to create an API-EndPoint 
+//publicProcedure it allow us to create an API-EndPoint ..
 //privateProcedure parameter when it exported would be the const variable: isAuth
 /**
  * Initialization of tRPC backend
