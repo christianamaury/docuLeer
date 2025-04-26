@@ -12,7 +12,7 @@ import { Loader2 } from 'lucide-react'
 //This Page automatically once its load to the user
 
 const AuthCallbackContent = () => {
-
+    
     const router = useRouter()
     const searchParams = useSearchParams()
     const origin = searchParams.get('origin')
