@@ -2,19 +2,23 @@
 
 //We have to do this config in order to use our PDF
 const nextConfig = {
+
     // Add dynamic env fallback using VERCEL_URL
-    env: {
-      KINDE_SITE_URL: process.env.KINDE_SITE_URL ?? `https://${process.env.VERCEL_URL}`,
+    //Testing: Implementation wasn't correct;
+    // env: {
+    //   KINDE_SITE_URL: process.env.KINDE_SITE_URL ?? `https://${process.env.VERCEL_URL}`,
 
-      KINDE_POST_LOGOUT_REDIRECT_URL:
+    //   KINDE_POST_LOGOUT_REDIRECT_URL:
 
-        process.env.KINDE_POST_LOGOUT_REDIRECT_URL ?? `https://${process.env.VERCEL_URL}`,
-      KINDE_POST_LOGIN_REDIRECT_URL:
+    //     process.env.KINDE_POST_LOGOUT_REDIRECT_URL ?? `https://${process.env.VERCEL_URL}`,
+        
+    //   KINDE_POST_LOGIN_REDIRECT_URL:
       
-        process.env.KINDE_POST_LOGIN_REDIRECT_URL ?? `https://${process.env.VERCEL_URL}/dashboard`
-    },
+    //     process.env.KINDE_POST_LOGIN_REDIRECT_URL ?? `https://${process.env.VERCEL_URL}/dashboard`
+    // },
   
     async redirects() {
+      //Returns two Obbjects; 
       return [
         {
           source: "/sign-in",
