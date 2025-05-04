@@ -7,7 +7,7 @@ import {redirect} from 'next/navigation'
 //Database Model; 
 import {db} from '@/db'
 //Dashboard Component: 
-import Dashboard from '../app/Components/Dashboard'
+import Dashboard from '@/app/Components/Dashboard'
 import { getUserSubscriptionPlan } from "@/app/lib/stripe"
 //!user doesn't exist, redirect them if theyre not signed in
 //I also added the await method to the getKindeServerSession method()
