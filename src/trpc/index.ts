@@ -25,35 +25,49 @@ import { PLANS } from '@/config/stripe';
 export const appRouter = router({
 //..Query Request and Getting user ID to see if its there;
 authCallback: publicProcedure.query(async () => {
-const { getUser } = await getKindeServerSession()
-const user = await getUser()
+    console.log('[TRPC authCallback] Entered');
+    const { getUser } = await getKindeServerSession();
+    console.log('[TRPC authCallback] Got getKindeServerSession');
+    const user = await getUser();
+    console.log(`[TRPC authCallback] Got user from Kinde: ${user?.id}`);
 
-    if(!user?.id || !user?.email) 
-    //Error Utility from TRPC
-    throw new TRPCError({code: 'UNAUTHORIZED'})
-
-    //Check if user is in the Database. Attempting to find user in our Databse;
-    const dbUser =  await db.user .findFirst({
-        where: {
-            id: user.id
-        }
-    })
-
-    if(!dbUser){
-        //Create user in DataBase;
-        await db.user.create({
-            data:{
-                id: user.id,
-                email: user.email
-            }
-        })
-
+    if (!user?.id || !user?.email) {
+        console.error('[TRPC authCallback] User unauthorized or missing details from Kinde.');
+        throw new TRPCError({ code: 'UNAUTHORIZED' });
     }
-    //Changed the success property. I can also try with the 200 status code
-    return {success: true}
-    // return {status: 'success'}
 
-    }),
+    console.log(`[TRPC authCallback] Checking DB for user ${user.id}`);
+    let dbUser;
+    try {
+        dbUser = await db.user.findFirst({
+            where: {
+                id: user.id
+            }
+        });
+        console.log(`[TRPC authCallback] DB check complete. User found: ${!!dbUser}`);
+    } catch (error) {
+        console.error(`[TRPC authCallback] Error during db.user.findFirst for user ${user.id}:`, error);
+        throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database query failed while checking user.' });
+    }
+
+    if (!dbUser) {
+        console.log(`[TRPC authCallback] Creating user ${user.id} in DB`);
+        try {
+            await db.user.create({
+                data: {
+                    id: user.id,
+                    email: user.email
+                }
+            });
+            console.log(`[TRPC authCallback] User ${user.id} created in DB`);
+        } catch (error) {
+            console.error(`[TRPC authCallback] Error during db.user.create for user ${user.id}:`, error);
+            throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Database query failed while creating user.' });
+        }
+    }
+    console.log('[TRPC authCallback] Exiting successfully');
+    return { success: true };
+}),
 
     getUserFiles: privateProcedure.query(async ({ctx}) => {
         //Destructin from the Context Variable in the trpc, index.ts

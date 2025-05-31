@@ -4,20 +4,21 @@ import {PrismaClient} from '@prisma/client'
 
 declare global {
     // eslint-disable-next-line no-var
-    var cachedPrisma: PrismaClient
-
+    var cachedPrisma: PrismaClient | undefined; // Allow it to be undefined initially
 }
 
-let prisma: PrismaClient
-if(process.env.NODE_ENV === 'production')
-{
-    prisma = new PrismaClient()
-}
-else{
-    if(!global.cachedPrisma){
-        global.cachedPrisma = new PrismaClient()
-    }
-    prisma = global.cachedPrisma
-}
+let prisma: PrismaClient;
 
-export const db = prisma
+// Unified logic for both production and development
+if (!global.cachedPrisma) {
+    console.log('Initializing new PrismaClient and caching globally.');
+    global.cachedPrisma = new PrismaClient({
+        // Optional: Add logging based on environment. For Vercel, Prisma recommends:
+        // log: ['query', 'info', 'warn', 'error'], // Adjust as needed
+    });
+} else {
+    console.log('Reusing cached PrismaClient from global.');
+}
+prisma = global.cachedPrisma;
+
+export const db = prisma;
